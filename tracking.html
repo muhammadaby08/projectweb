@@ -3,54 +3,161 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cek Pengiriman Mahasiswa</title>
+  <title>Dashboard Tracking Delivery Order</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
   <link rel="stylesheet" href="tracking.css">
 </head>
-<body>
+<body class="bg-slate-100 font-sans min-h-screen p-6">
 
-  <div class="card">
-    <h2>Lacak Pengiriman Paket</h2>
-    <div class="search-box">
-      <input type="text" id="inputNIM" placeholder="Masukkan NIM / Nomor Resi...">
-      <button id="btnCari" onclick="cariPengiriman()">Cari</button>
+  <div class="max-w-3xl mx-auto space-y-6">
+    
+    <!-- Section Search Input -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h1 class="text-2xl font-bold text-slate-800 mb-4">Lacak Delivery Order</h1>
+      <form id="searchForm" onsubmit="handleSearch(event)" class="search-form">
+        <input 
+          type="text" 
+          id="doNumber" 
+          placeholder="Masukkan Nomor DO (Contoh: DO12345)" 
+          class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        >
+        <button 
+          type="submit" 
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition-colors"
+        >
+          Cari
+        </button>
+      </form>
     </div>
-    <div id="hasilPengiriman" class="result-container" style="display: none;">
-      <div class="header-result">
-        <small>Nama Mahasiswa:</small>
-        <h3 id="namaMahasiswa">-</h3>
-      </div>
-      <div class="status-section">
-        <div class="status-header">
-          <span>Status Pengiriman:</span>
-          <strong id="textStatus" class="badge">Selesai</strong>
+
+    <!-- Section Result (Hidden Default) -->
+    <div id="resultCard" class="hidden bg-white p-6 rounded-xl shadow-md space-y-6">
+      
+      <!-- Informasi Mahasiswa & Status Badge -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-2">
+        <div>
+          <p class="text-sm text-slate-500">Penerima Paket</p>
+
+          <h2 id="resStudentName" class="text-xl font-bold text-slate-800">-</h2>
+          <p id="resDoNumber" class="text-xs text-slate-400 font-mono mt-0.5">-</p>
         </div>
-        <div class="progress-bar-bg">
-          <div id="progressBar" class="progress-bar-fill"></div>
+        <div>
+          <span id="resStatusBadge" class="px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
+            Dalam Pengiriman
+          </span>
         </div>
       </div>
-      <h4>Detail Pengiriman</h4>
-      <table class="detail-table">
-        <tr>
-          <th>Ekspedisi</th>
-          <td id="detailEkspedisi">-</td>
-        </tr>
-        <tr>
-          <th>Tanggal Kirim</th>
-          <td id="detailTanggal">-</td>
-        </tr>
-        <tr>
-          <th>Jenis Paket</th>
-          <td id="detailJenis">-</td>
-        </tr>
-        <tr>
-          <th>Total Pembayaran</th>
-          <td id="detailTotal" class="price">-</td>
-        </tr>
-      </table>
+
+      <!-- Simulasi Visual Progress Bar Status -->
+      <div>
+        <p class="text-sm font-medium text-slate-700 mb-2">Progres Pengiriman</p>
+        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+          <div id="resProgressBar" class="bg-blue-600 h-3 rounded-full transition-all duration-500" style="width: 65%"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-500 mt-2">
+          <span>Diproses</span>
+          <span>Dikirim</span>
+          <span>Sampai Tujuan</span>
+        </div>
+      </div>
+
+      <!-- Detail Ekspedisi -->
+      <div>
+        <h3 class="text-md font-semibold text-slate-800 mb-3">Detail Ekspedisi</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
+          <div>
+            <p class="text-xs text-slate-500">Ekspedisi</p>
+            <p id="resExpedition" class="text-sm font-semibold text-slate-700">-</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Tanggal Kirim</p>
+            <p id="resSendDate" class="text-sm font-semibold text-slate-700">-</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Jenis Paket</p>
+            <p id="resPackageType" class="text-sm font-semibold text-slate-700">-</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Total Pembayaran</p>
+            <p id="resTotalPayment" class="text-sm font-semibold text-blue-600">-</p>
+          </div>
+        </div>
+      </div>
 
     </div>
+
+    <!-- State Error / Not Found -->
+    <div id="notFoundCard" class="hidden bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-center">
+      Nomor Delivery Order tidak ditemukan. Coba gunakan nomor: <strong>DO12345</strong> atau <strong>DO67890</strong>
+    </div>
+
   </div>
 
-  <script src="data.js"></script>
+  <!-- JavaScript Logic -->
+  <script>
+    // Mock Database
+    const mockData = {
+      "DO12345": {
+        studentName: "Budi Santoso",
+        status: "Dalam Pengiriman",
+        progress: 65,
+        statusColor: "bg-blue-100 text-blue-800",
+        barColor: "bg-blue-600",
+        expedition: "JNE Express",
+        sendDate: "2026-10-03",
+        packageType: "Bahan Ajar & Modul",
+        totalPayment: "Rp 150.000"
+      },
+      "DO67890": {
+        studentName: "Siti Aminah",
+        status: "Selesai / Diterima",
+        progress: 100,
+        statusColor: "bg-green-100 text-green-800",
+        barColor: "bg-green-600",
+        expedition: "J&T Express",
+        sendDate: "2026-09-28",
+        packageType: "Alat Laboratorium",
+        totalPayment: "Rp 320.000"
+      }
+    };
+
+    function handleSearch(event) {
+      event.preventDefault();
+      
+      const inputVal = document.getElementById('doNumber').value.trim().toUpperCase();
+      const resultCard = document.getElementById('resultCard');
+      const notFoundCard = document.getElementById('notFoundCard');
+
+      if (mockData[inputVal]) {
+        const data = mockData[inputVal];
+
+        // Populate Data
+        document.getElementById('resStudentName').innerText = data.studentName;
+        document.getElementById('resDoNumber').innerText = `No. DO: ${inputVal}`;
+        
+        const badge = document.getElementById('resStatusBadge');
+        badge.innerText = data.status;
+        badge.className = `px-3 py-1 rounded-full text-sm font-semibold ${data.statusColor}`;
+
+        const progressBar = document.getElementById('resProgressBar');
+        progressBar.style.width = `${data.progress}%`;
+        progressBar.className = `h-3 rounded-full transition-all duration-500 ${data.barColor}`;
+
+        document.getElementById('resExpedition').innerText = data.expedition;
+        document.getElementById('resSendDate').innerText = data.sendDate;
+        document.getElementById('resPackageType').innerText = data.packageType;
+        document.getElementById('resTotalPayment').innerText = data.totalPayment;
+
+        // Toggle UI
+        resultCard.classList.remove('hidden');
+        notFoundCard.classList.add('hidden');
+      } else {
+        resultCard.classList.add('hidden');
+        notFoundCard.classList.remove('hidden');
+      }
+    }
+  </script>
 </body>
 </html>

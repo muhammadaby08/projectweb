@@ -4,111 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manajemen Stok Bahan Ajar</title>
-    <link rel="stylesheet" href="stock.css">
+  <link rel="stylesheet" href="stock.css">
+
 </head>
 <body>
 
-  <h2>Daftar Stok Bahan Ajar</h2>
-  <div class="form-container">
-    <h3>Tambah Stok Baru
-    <form id="formTambahStok">
-      <div class="form-group">
-        <label for="kode">Kode Mata Kuliah:</label>
-        <input type="text" id="kode" required placeholder="Contoh: EKMA4115">
-      </div>
-      <div class="form-group">
-        <label for="nama">Nama Bahan Ajar:</label>
-        <input type="text" id="nama" required placeholder="Contoh: Pengantar Akuntansi">
-      </div>
-      <div class="form-group">
-        <label for="stok">Jumlah Stok:</label>
-        <input type="number" id="stok" min="0" required placeholder="Contoh: 30">
-      </div>
-      <div class="form-group">
-        <label for="kategori">Kategori:</label>
-        <select id="kategori" required>
-          <option value="">-- Pilih Kategori --</option>
-          <option value="Modul">Modul</option>
-          <option value="Buku Teks">Buku Teks</option>
-          <option value="Digital">Digital</option>
-        </h3></select>
-      </div>
-      <button type="submit">Tambah Stok</button>
+  <div class="container">
+    <h2>Daftar Stok Bahan Ajar</h2>
+
+    <!-- Form Tambah Stok Baru -->
+    <form id="formStok" class="form-group">
+      <input type="text" id="inputKode" placeholder="Kode Paket (contoh: BMP004)" required>
+      <input type="text" id="inputNama" placeholder="Nama Bahan Ajar" required>
+      <input type="number" id="inputStok" placeholder="Jumlah Stok" required>
+      <input type="text" id="inputHarga" placeholder="Harga (contoh: Rp 50.000)" required>
+      <button type="submit" class="btn-add">+ Tambah Stok</button>
     </form>
+
+    <!-- Tabel Data Stok -->
+    <table>
+      <thead>
+        <tr>
+          <th>Kode</th>
+          <th>Nama Bahan Ajar</th>
+          <th>Stok</th>
+          <th>Harga</th>
+        </tr>
+      </thead>
+      <tbody id="tabelStokBody">
+        <!-- Baris data akan dimasukkan secara dinamis lewat JS -->
+      </tbody>
+    </table>
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th>No</th>
-        <th>Kode</th>
-        <th>Nama Bahan Ajar</th>
-        <th>Jumlah Stok</th>
-        <th>Kategori</th>
-      </tr>
-    </thead>
-    <tbody id="tabelBody">
-    </tbody>
-  </table>
 
-
+  <!-- Load data dummy terlebih dahulu -->
   <script src="data.js"></script>
-
-
-  <script>
-    const tabelBody = document.getElementById('tabelBody');
-    const formTambahStok = document.getElementById('formTambahStok');
-
-    function tampilkanData() {
-      
-      tabelBody.innerHTML = '';
-
-
-      dataBahanAjar.forEach((item, index) => {
-        const tr = document.createElement('tr');
-
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${item.kode}</td>
-          <td>${item.nama}</td>
-          <td>${item.stok}</td>
-          <td>${item.kategori}</td>
-        `;
-
-        tabelBody.appendChild(tr);
-      });
-    }
-    function tambahBarisStok(event) {
-      event.preventDefault(); 
-
- 
-      const kodeInput = document.getElementById('kode').value.trim();
-      const namaInput = document.getElementById('nama').value.trim();
-      const stokInput = parseInt(document.getElementById('stok').value, 10);
-      const kategoriInput = document.getElementById('kategori').value;
-
-
-      const dataBaru = {
-        kode: kodeInput,
-        nama: namaInput,
-        stok: stokInput,
-        kategori: kategoriInput
-      };
-
-     
-      dataBahanAjar.push(dataBaru);
-
-    
-      tampilkanData();
-
-     
-      formTambahStok.reset();
-    }
-
-    
-    formTambahStok.addEventListener('submit', tambahBarisStok);
-
-    document.addEventListener('DOMContentLoaded', tampilkanData);
-  </script>
-
+  <!-- Load logika DOM JS -->
+  <script src="app.js"></script>
 </body>
 </html>

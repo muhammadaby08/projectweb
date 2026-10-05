@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cek Pengiriman Mahasiswa</title>
+  <link rel="stylesheet" href="tracking.css">
+</head>
+<body>
+
+  <div class="card">
+    <h2>Lacak Pengiriman Paket</h2>
+    <div class="search-box">
+      <input type="text" id="inputNIM" placeholder="Masukkan NIM / Nomor Resi...">
+      <button id="btnCari" onclick="cariPengiriman()">Cari</button>
+    </div>
+    <div id="hasilPengiriman" class="result-container" style="display: none;">
+      <div class="header-result">
+        <small>Nama Mahasiswa:</small>
+        <h3 id="namaMahasiswa">-</h3>
+      </div>
+      <div class="status-section">
+        <div class="status-header">
+          <span>Status Pengiriman:</span>
+          <strong id="textStatus" class="badge">Selesai</strong>
+        </div>
+        <div class="progress-bar-bg">
+          <div id="progressBar" class="progress-bar-fill"></div>
+        </div>
+      </div>
+      <h4>Detail Pengiriman</h4>
+      <table class="detail-table">
+        <tr>
+          <th>Ekspedisi</th>
+          <td id="detailEkspedisi">-</td>
+        </tr>
+        <tr>
+          <th>Tanggal Kirim</th>
+          <td id="detailTanggal">-</td>
+        </tr>
+        <tr>
+          <th>Jenis Paket</th>
+          <td id="detailJenis">-</td>
+        </tr>
+        <tr>
+          <th>Total Pembayaran</th>
+          <td id="detailTotal" class="price">-</td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+</body>
+</html>

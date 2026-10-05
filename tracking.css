@@ -1,0 +1,195 @@
+body {
+  background-image: url('background3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+h3 {
+  text-align: center;
+  color: white;
+  font-family:  'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: small;
+}
+h2 {
+  text-align: center;
+  color: white;
+  font-family:  'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 35px;
+}
+h1 {
+  text-align: center;
+  color: white;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-size: 50px;
+}
+.form-floating {
+  width: 400px;
+  padding: 20px;
+}
+p{
+  color:white;
+  width: 100%;
+  height: auto;
+}
+a {
+  color: rgba(232, 33, 15, 0.938);
+}
+
+.card-text {
+  color: black;
+}
+footer {
+  display: flex;
+  justify-content: flex-end; 
+  padding: 500px 20px;  
+  position: fixed;   
+    
+}
+
+.copyright {
+  margin: 0;
+  font-size: 10px;
+  color: #666666;
+}
+
+button {
+  width: 15%;
+  padding: 10px;
+  background-color: #0066ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: url('background3.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tracking-card {
+  background: rgba(0, 0, 0, 0.65); /* Latar hitam semi-transparan */
+  backdrop-filter: blur(10px); /* Efek buram latar belakang */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 500px;
+}
+
+.tracking-card h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-box button {
+  padding: 12px 1px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.search-box button:hover {
+  background-color: #0056b3;
+}
+
+
+.result-container {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+.value-highlight {
+  margin: 5px 0 15px 0;
+  color: #4da6ff;
+}
+
+.status-section {
+  margin-bottom: 20px;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #fff;
+}
+
+.progress-bar-bg {
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  transition: width 0.8s ease-in-out;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.detail-table th, .detail-table td {
+  padding: 10px 0;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
+}
+
+.detail-table th {
+  color: #ccc;
+  font-weight: normal;
+  width: 40%;
+}
+
+.price {
+  font-weight: bold;
+  color: #28a745;
+}

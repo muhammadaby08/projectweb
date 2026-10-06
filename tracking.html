@@ -31,10 +31,9 @@
       </form>
     </div>
 
-    <!-- Section Result (Hidden Default) -->
+   
     <div id="resultCard" class="hidden bg-white p-6 rounded-xl shadow-md space-y-6">
       
-      <!-- Informasi Mahasiswa & Status Badge -->
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-2">
         <div>
           <p class="text-sm text-slate-500">Penerima Paket</p>
@@ -49,7 +48,7 @@
         </div>
       </div>
 
-      <!-- Simulasi Visual Progress Bar Status -->
+     
       <div>
         <p class="text-sm font-medium text-slate-700 mb-2">Progres Pengiriman</p>
         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
@@ -62,7 +61,7 @@
         </div>
       </div>
 
-      <!-- Detail Ekspedisi -->
+    
       <div>
         <h3 class="text-md font-semibold text-slate-800 mb-3">Detail Ekspedisi</h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
@@ -87,40 +86,41 @@
 
     </div>
 
-    <!-- State Error / Not Found -->
     <div id="notFoundCard" class="hidden bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-center">
       Nomor Delivery Order tidak ditemukan. Coba gunakan nomor: <strong>DO12345</strong> atau <strong>DO67890</strong>
     </div>
 
   </div>
 
-  <!-- JavaScript Logic -->
   <script>
-    // Mock Database
+  
     const mockData = {
-      "DO12345": {
-        studentName: "Budi Santoso",
-        status: "Dalam Pengiriman",
+      "2023001234": {
+        studentName: "Rina Wulandari",
+        status: "Dalam Perjalanan",
         progress: 65,
         statusColor: "bg-blue-100 text-blue-800",
         barColor: "bg-blue-600",
         expedition: "JNE Express",
-        sendDate: "2026-10-03",
-        packageType: "Bahan Ajar & Modul",
-        totalPayment: "Rp 150.000"
+        sendDate: "2025-08-25",
+        packageType: "OJK01",
+        totalPayment: "Rp 180.000"
+        
+        
       },
-      "DO67890": {
-        studentName: "Siti Aminah",
-        status: "Selesai / Diterima",
+      "2023005678": {
+        studentName: "Agus Pranoto",
+        status: "Dikirim",
         progress: 100,
         statusColor: "bg-green-100 text-green-800",
         barColor: "bg-green-600",
-        expedition: "J&T Express",
-        sendDate: "2026-09-28",
-        packageType: "Alat Laboratorium",
-        totalPayment: "Rp 320.000"
+        expedition: "Pos Indonesia",
+        sendDate: "2025-08-25",
+        packageType: "OUPBJJBDG",
+        totalPayment: "Rp 220.000"
       }
     };
+    
 
     function handleSearch(event) {
       event.preventDefault();
@@ -132,7 +132,7 @@
       if (mockData[inputVal]) {
         const data = mockData[inputVal];
 
-        // Populate Data
+       
         document.getElementById('resStudentName').innerText = data.studentName;
         document.getElementById('resDoNumber').innerText = `No. DO: ${inputVal}`;
         
@@ -149,7 +149,6 @@
         document.getElementById('resPackageType').innerText = data.packageType;
         document.getElementById('resTotalPayment').innerText = data.totalPayment;
 
-        // Toggle UI
         resultCard.classList.remove('hidden');
         notFoundCard.classList.add('hidden');
       } else {

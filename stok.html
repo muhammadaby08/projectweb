@@ -12,7 +12,7 @@
   <div class="container">
     <h2>Daftar Stok Bahan Ajar</h2>
 
-    <!-- Form Tambah Stok Baru -->
+   
     <form id="formStok" class="form-group">
       <input type="text" id="inputKode" placeholder="Kode Paket (contoh: BMP004)" required>
       <input type="text" id="inputNama" placeholder="Nama Bahan Ajar" required>
@@ -21,7 +21,7 @@
       <button type="submit" class="btn-add">+ Tambah Stok</button>
     </form>
 
-    <!-- Tabel Data Stok -->
+  
     <table>
       <thead>
         <tr>
@@ -32,14 +32,11 @@
         </tr>
       </thead>
       <tbody id="tabelStokBody">
-        <!-- Baris data akan dimasukkan secara dinamis lewat JS -->
       </tbody>
     </table>
   </div>
 
-  <!-- Load data dummy terlebih dahulu -->
   <script src="data.js"></script>
-  <!-- Load logika DOM JS -->
   <script src="app.js"></script>
 </body>
 </html>

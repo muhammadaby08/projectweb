@@ -14,7 +14,7 @@
 
 }
 
-    /* Section Hero (Bagian Atas) */
+   
     .hero {
       height: 100vh;
       display: flex;
@@ -38,7 +38,7 @@
       height: 400px;
     }
 
-    /* Container Konten */
+   
     .content-section {
       padding: 100px 20px;
       max-width: 1000px;
@@ -54,7 +54,7 @@
     }
 
     .card h2 {
-      color: #667eea;
+      color: rgb(8, 180, 180);
       margin-bottom: 15px;
     }
 
@@ -63,18 +63,13 @@
       color: #cccccc;
     }
 
-    /* =========================================
-       CSS UNTUK ANIMASI SCROLL
-       ========================================= */
-    
-    /* State Awal (Sebelum di-scroll) */
     .animate-on-scroll {
-      opacity: 0; /* Elemen tembus pandang */
-      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); /* Efek transisi halus */
+      opacity: 0; 
+      transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); 
       will-change: opacity, transform;
     }
 
-    /* Variasi 1: Muncul dari Bawah (Fade Up) */
+
     .fade-up {
       transform: translateY(80px);
       display: flex;
@@ -85,7 +80,7 @@
        
     }
 
-    /* Variasi 2: Muncul dari Kiri (Slide Left) */
+   
     .slide-left {
       transform: translateX(-100px);
       transform: translateY(80px);
@@ -96,7 +91,7 @@
       background: url('sc2.png') no-repeat center/cover;
     }
 
-    /* Variasi 3: Muncul dari Kanan (Slide Right) */
+   
     .slide-right {
       transform: translateX(100px);
       transform: translateY(80px);
@@ -107,7 +102,7 @@
       background: url('sc3.png') no-repeat center/cover;
     }
 
-    /* Variasi 4: Membesar (Zoom In) */
+    
     .zoom-in {
       transform: scale(0.7);
       transform: translateY(80px);
@@ -118,7 +113,6 @@
       background: url('sc4.png') no-repeat center/cover;
     }
 
-    /* State Akhir (Saat elemen masuk ke layar / Terlihat) */
     .animate-on-scroll.show {
       opacity: 1;
       transform: translate(0) scale(1);

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me | Portofolio</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Awesome untuk Ikon Media Sosial -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Memuat Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Konfigurasi kustom Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Tambahan untuk animasi kustom yang tidak ada di Tailwind default */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.6;
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex items-center justify-center p-4 sm:p-8 relative overflow-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Efek Latar Belakang (Blobs) -->
+    <div class="blob bg-blue-600/30 w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+    <div class="blob bg-purple-600/30 w-96 h-96 rounded-full bottom-0 right-0 translate-x-1/3 translate-y-1/3"></div>
+
+    <!-- Kontainer Utama (Kartu Profil) -->
+    <main class="glass-panel rounded-3xl shadow-2xl max-w-5xl w-full z-10 overflow-hidden transition-all duration-500 hover:shadow-brand-500/10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 lg:gap-8 items-center">
+            
+            <!-- Bagian Kiri: Foto Profil -->
+            <div class="lg:col-span-5 p-8 lg:p-12 flex justify-center items-center bg-slate-900/30 h-full relative">
+                <!-- Elemen dekoratif melingkar di belakang foto -->
+                <div class="absolute w-64 h-64 border border-slate-700/50 rounded-full animate-[spin_10s_linear_infinite]"></div>
+                <div class="absolute w-72 h-72 border border-brand-500/20 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+                
+                <div class="relative group cursor-pointer animate-float">
+                    <!-- Glow effect saat hover -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full blur opacity-25 group-hover:opacity-75 transition duration-500"></div>
+                    
+                    <!-- Gambar Profil -->
+                    <img src="foto8.jpg" 
+                         alt="Foto Profil" 
+                         class="relative w-56 h-56 lg:w-64 lg:h-64 object-cover rounded-full border-4 border-slate-800 shadow-xl transition-transform duration-500 group-hover:scale-105">
+                </div>
+            </div>
+
+            <!-- Bagian Kanan: Informasi Detail -->
+            <div class="lg:col-span-7 p-8 lg:p-12 lg:pl-0">
+                
+                <div class="mb-2">
+                    <span class="inline-block py-1 px-3 rounded-full bg-brand-500/10 text-brand-400 text-sm font-semibold tracking-wider uppercase mb-3 border border-brand-500/20">
+                        Halo, Saya
+                    </span>
+                </div>
+                
+                <!-- Nama dengan efek gradasi -->
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-2 tracking-tight text-white">
+                    Muhammad <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Aby</span>
+                </h1>
+                
+                <h2 class="text-xl sm:text-2xl font-medium text-slate-400 mb-6">
+                    Fullstack Web Developer & UI/UX Enthusiast
+                </h2>
+
+                <!-- Deskripsi / Bio -->
+                <p class="text-slate-300 leading-relaxed mb-8 text-lg">
+                    Saya adalah seorang pengembang perangkat lunak yang bersemangat dalam membangun aplikasi web modern dan interaktif. Saya suka memecahkan masalah kompleks dan mengubahnya menjadi desain antarmuka yang sederhana, indah, dan intuitif. Menikmati setiap perjalanan, dan belajar hidup dari pengalaman.
+                </p>
+
+                <!-- Bagian Skills -->
+                <div class="mb-8">
+                    <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">
+                        Keahlian & Teknologi
+                    </h3>
+                    <div class="flex flex-wrap gap-2 sm:gap-3">
+                        <!-- Skill Badges -->
+                        <span class="px-4 py-2 bg-slate-800 hover:bg-orange-500/20 hover:text-orange-400 hover:border-orange-500/50 border border-slate-700 rounded-lg text-sm font-medium transition-all duration-300 cursor-default">HTML5 / CSS3</span>
+                        <span class="px-4 py-2 bg-slate-800 hover:bg-yellow-400/20 hover:text-yellow-400 hover:border-yellow-400/50 border border-slate-700 rounded-lg text-sm font-medium transition-all duration-300 cursor-default">JavaScript (ES6+)</span>
+                        <span class="px-4 py-2 bg-slate-800 hover:bg-cyan-500/20 hover:text-cyan-400 hover:border-cyan-500/50 border border-slate-700 rounded-lg text-sm font-medium transition-all duration-300 cursor-default">React.js</span>
+                    </div>
+                </div>
+
+                <!-- Bagian Kontak & Media Sosial -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-4">
+                    
+                    <!-- Tombol Kontak Utama -->
+                    <a href="https://www.instagram.com/abyyant/" class="inline-flex items-center justify-center px-6 py-3 bg-brand-600 hover:bg-brand-500 text-white font-medium rounded-xl transition-colors duration-300 shadow-lg shadow-brand-500/30 group">
+                        <i class="fa-solid fa-paper-plane mr-2 group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform"></i>
+                        Hubungi Saya
+                    </a>
+
+                    <!-- Ikon Media Sosial -->
+                    <div class="flex items-center gap-4">
+                        <a href="https://www.linkedin.com/in/muhammad-aby-89497a1b2/" aria-label="LinkedIn" class="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:bg-[#0a66c2] hover:text-white hover:border-[#0a66c2] transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-black/20">
+                            <i class="fa-brands fa-linkedin-in text-xl"></i>
+                        </a>
+                        <a href="https://github.com/repos?q=owner%3A%40me" aria-label="GitHub" class="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:bg-white hover:text-slate-900 hover:border-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-black/20">
+                            <i class="fa-brands fa-github text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

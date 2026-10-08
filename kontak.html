@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubungi Saya | Contact & Socials</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom styling for ambient effects and animations -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism style */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2);
+        }
+
+        /* Ambient Glow Effect */
+        .glow-bg {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        /* Toast notification animations */
+        #toast {
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .toast-show {
+            transform: translateY(0) scale(1) !important;
+            opacity: 1 !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-sky-500 selection:text-white relative">
+
+    <!-- Background Ambient Glows -->
+    <div class="glow-bg w-96 h-96 bg-sky-500 top-10 left-10"></div>
+    <div class="glow-bg w-96 h-96 bg-purple-600 bottom-10 right-10"></div>
+    <div class="glow-bg w-80 h-80 bg-blue-600 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+    <!-- Navbar Header -->
+    <header class="sticky top-0 z-40 w-full glass-card border-b border-slate-800/80 bg-slate-950/70 backdrop-blur-md">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20 group-hover:scale-105 transition-transform duration-300">
+                    <i class="fa-solid font-bold fa-paper-plane text-sm"></i>
+                </div>
+                <span class="text-lg font-bold tracking-tight text-white group-hover:text-sky-400 transition-colors">abyyant</span></span>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="flex items-center space-x-6 text-sm font-medium text-slate-300">
+                <a href="#" class="hover:text-sky-400 transition-colors">Beranda</a>
+                <a href="#contact-grid" class="hover:text-sky-400 transition-colors">Sosial Media</a>
+                <a href="#message-form" class="px-4 py-2 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/30 hover:bg-sky-500 hover:text-white transition-all duration-300 font-semibold">Pesan Direct</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 space-y-16">
+
+        <!-- Hero Section -->
+        <section class="text-center max-w-3xl mx-auto space-y-4">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                Mari Terhubung & <span class="bg-gradient-to-r from-sky-400 to-blue-500 bg-clip-text text-transparent">Berkolaborasi</span>
+            </h1>
+            <p class="text-base sm:text-lg text-slate-400 font-normal leading-relaxed">
+                Punya pertanyaan, ide proyek, atau sekadar ingin menyapa? Pilih media sosial favoritmu di bawah ini atau kirimkan pesan langsung.
+            </p>
+        </section>
+
+        <!-- Social Media Grid Section -->
+        <section id="contact-grid" class="space-y-6">
+            <div class="flex items-center space-x-3">
+                <i class="fa-solid fa-share-nodes text-sky-400 text-xl"></i>
+                <h2 class="text-2xl font-bold text-white">Media Sosial & Kontak Langsung</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+                <!-- Instagram Card -->
+                <a href="https://www.instagram.com/abyyant/" target="_blank" rel="noopener noreferrer" 
+                   class="glass-card rounded-2xl p-5 flex items-center space-x-4 group hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-white group-hover:text-sky-400 transition-colors">Instagram</h3>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-sky-400 transition-colors"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">@abyyant</p>
+                        <span class="inline-block mt-2 text-[11px] font-medium text-slate-400 bg-slate-800/60 px-2 py-0.5 rounded">Ikuti Update</span>
+                    </div>
+                </a>
+
+                <!-- GitHub Card -->
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
+                   class="glass-card rounded-2xl p-5 flex items-center space-x-4 group hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                    <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <i class="fa-brands fa-github"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-white group-hover:text-sky-400 transition-colors">GitHub</h3>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-sky-400 transition-colors"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">github.com/abyyant</p>
+                        <span class="inline-block mt-2 text-[11px] font-medium text-slate-400 bg-slate-800/60 px-2 py-0.5 rounded">Proyek & Repositori</span>
+                    </div>
+                </a>
+
+                <!-- WhatsApp / Phone Card -->
+                <div class="glass-card rounded-2xl p-5 flex items-center space-x-4 group hover:-translate-y-1 transition-all duration-300 relative">
+                    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-xl bg-emerald-600/90 flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <a href="https://wa.me/6282311594737" target="_blank" rel="noopener noreferrer" class="font-semibold text-white group-hover:text-emerald-400 transition-colors truncate">WhatsApp</a>
+                            <button onclick="copyText('+62 812-3456-7890', 'Nomor WhatsApp')" title="Salin Nomor" class="text-slate-400 hover:text-sky-400 p-1.5 rounded-lg hover:bg-slate-800/80 transition-colors">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">+62 823-1159-4737</p>
+                        <a href="https://wa.me/6282311594737" target="_blank" rel="noopener noreferrer" class="inline-block mt-2 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">Chat Langsung</a>
+                    </div>
+                </div>
+
+                <!-- Email Card -->
+                <div class="glass-card rounded-2xl p-5 flex items-center space-x-4 group hover:-translate-y-1 transition-all duration-300 relative">
+                    <a href="mailto:contact@abyyant.dev" class="w-12 h-12 rounded-xl bg-sky-600/90 flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition-transform duration-300 shrink-0">
+                        <i class="fa-regular fa-envelope"></i>
+                    </a>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <a href="mailto:contact@abyyant.dev" class="font-semibold text-white group-hover:text-sky-400 transition-colors truncate">Email Utama</a>
+                            <button onclick="copyText('abiyantoro112@gmail.com', 'Alamat Email')" title="Salin Email" class="text-slate-400 hover:text-sky-400 p-1.5 rounded-lg hover:bg-slate-800/80 transition-colors">
+                                <i class="fa-regular fa-copy text-xs"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">abiyantoro112@gmail.com</p>
+                        <a href="mailto:abiyantoro112@gmail.com" class="inline-block mt-2 text-[11px] font-medium text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">Kirim Email</a>
+                    </div>
+                </div>
+
+                <!-- YouTube Card -->
+                <a href="https://www.youtube.com/@abyyyant" target="_blank" rel="noopener noreferrer" 
+                   class="glass-card rounded-2xl p-5 flex items-center space-x-4 group hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+                    <div class="w-12 h-12 rounded-xl bg-red-600 flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-semibold text-white group-hover:text-sky-400 transition-colors">YouTube</h3>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-sky-400 transition-colors"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">abyyant Channel</p>
+                        <span class="inline-block mt-2 text-[11px] font-medium text-slate-400 bg-slate-800/60 px-2 py-0.5 rounded">Konten Video</span>
+                    </div>
+                </a>
+
+            </div>
+        </section>
+
+        <!-- Contact Form Section -->
+        <section id="message-form" class="glass-card rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-2xl relative overflow-hidden">
+            <div class="max-w-2xl mx-auto space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Kirim Pesan Langsung</h2>
+                    <p class="text-sm text-slate-400">Isi formulir di bawah ini dan saya akan merespon secepat mungkin.</p>
+                </div>
+
+                <form id="contactForm" onsubmit="handleFormSubmit(event)" class="space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <!-- Input Nama -->
+                        <div class="space-y-2">
+                            <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Nama Lengkap</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                    <i class="fa-regular fa-user text-sm"></i>
+                                </span>
+                                <input type="text" id="name" required placeholder="John Doe" 
+                                       class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Input Email -->
+                        <div class="space-y-2">
+                            <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Alamat Email</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                    <i class="fa-regular fa-envelope text-sm"></i>
+                                </span>
+                                <input type="email" id="email" required placeholder="nama@email.com" 
+                                       class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors text-sm">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Subject -->
+                    <div class="space-y-2">
+                        <label for="subject" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Subjek / Topik</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                <i class="fa-regular fa-bookmark text-sm"></i>
+                            </span>
+                            <input type="text" id="subject" required placeholder="Kolaborasi Proyek / Pertanyaan" 
+                                   class="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Input Message -->
+                    <div class="space-y-2">
+                        <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Pesan Anda</label>
+                        <textarea id="message" rows="5" required placeholder="Tuliskan pesan atau detail penawaran Anda di sini..." 
+                                  class="w-full p-4 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-colors text-sm resize-none"></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submitBtn" 
+                            class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-semibold shadow-lg shadow-sky-500/25 flex items-center justify-center space-x-2 transition-all duration-300 active:scale-[0.99] cursor-pointer">
+                        <i class="fa-regular fa-paper-plane text-sm"></i>
+                        <span>Kirim Pesan</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-slate-800/80 bg-slate-950/80 mt-12 py-8 text-center text-xs text-slate-500">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>© 2026 M. Abiyantoro. All rights reserved.</p>
+            <div class="flex items-center space-x-4">
+                <a href="https://www.instagram.com/abyyant/" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors"><i class="fa-brands fa-instagram text-base"></i></a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors"><i class="fa-brands fa-github text-base"></i></a>
+                <a href="https://www.youtube.com/@abyyyant" target="_blank" rel="noopener noreferrer" class="hover:text-sky-400 transition-colors"><i class="fa-brands fa-youtube text-base"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center space-x-3 bg-slate-900 border border-sky-500/40 text-white px-5 py-3.5 rounded-2xl shadow-2xl opacity-0 translate-y-8 pointer-events-none">
+        <div id="toastIcon" class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <div>
+            <h4 id="toastTitle" class="text-sm font-semibold text-white">Berhasil</h4>
+            <p id="toastMessage" class="text-xs text-slate-400">Teks berhasil disalin!</p>
+        </div>
+    </div>
+
+    <!-- JavaScript Interactions -->
+    <script>
+        // Function to copy text to clipboard with fallback
+        function copyText(text, label) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast("Teks Disalin!", `${label} (${text}) telah disalin ke clipboard.`);
+            } catch (err) {
+                showToast("Gagal", "Tidak dapat menyalin teks.", true);
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        // Toast notification system
+        let toastTimeout;
+        function showToast(title, message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            if (isError) {
+                toastIcon.className = "w-8 h-8 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0";
+                toastIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                toast.style.borderColor = 'rgba(244, 63, 94, 0.4)';
+            } else {
+                toastIcon.className = "w-8 h-8 rounded-full bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0";
+                toastIcon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                toast.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+            }
+
+            toast.classList.add('toast-show');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('toast-show');
+            }, 3500);
+        }
+
+        // Handle contact form submission
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin text-sm"></i> <span>Sending...</span>';
+
+            setTimeout(() => {
+                // Reset form & restore button
+                document.getElementById('contactForm').reset();
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+
+                // Show success notification
+                showToast("Pesan Terkirim!", "Terima kasih! Pesan Anda berhasil dikirim.");
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

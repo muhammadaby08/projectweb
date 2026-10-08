@@ -3,39 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Login Form</title>
+    <title>Muhammad Aby</title>
     <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
 
     <div class="login-box">
-        <h2>Login</h2>
+        <h2>Selamat Datang</h2>
         <form action="#">
-            <div class="input-box">
-                <input type="email" required>
-                <label>Email</label>
-                <i class="fa-solid fa-envelope"></i>
-            </div>
-            
-            <div class="input-box">
-                <input type="password" required>
-                <label>Password</label>
-                <i class="fa-solid fa-lock"></i>
-            </div>
-
-            <div class="remember-forgot">
-                <label><input type="checkbox"> Remember me</label>
-                <a href="#">Forgot Password?</a>
-            </div>
+            <h2></h2>
+        <form action="#">
+           
             <form action="triger.html" method="GET" class="form">
-            <a href="triger.html" class="btn-login">Login</a>
+            <a href="triger.html" class="btn-login">Lanjutkan</a>
             </form>
 
-          
-            <div class="register-link">
-                <p>Don't have an account? <a href="#">Register</a></p>
-            </div>
         </form>
     </div>
 
@@ -43,5 +26,38 @@
         <p>&copy; 2026 M.Abiyantoro. All rights reserved.</p>
     </footer>
 
+    <!-- Elemen Audio (Ganti src dengan path file musik Anda) -->
+<audio id="bgMusic" loop>
+  <source src="TULUS - Teh Hijau.mp3" type="audio/mpeg">
+  Browser Anda tidak mendukung elemen audio.
+</audio>
+
+<!-- Tombol Floating Play/Pause Musik -->
+<button id="musicToggleBtn" class="music-btn" onclick="toggleMusic()">
+  🎵 <span id="musicText">Play Music</span>
+ <script> const bgMusic = document.getElementById("bgMusic");
+const musicText = document.getElementById("musicText");
+let isMusicPlaying = false;
+
+// Atur volume musik (0.0 sampai 1.0)
+bgMusic.volume = 0.3; 
+
+function toggleMusic() {
+  if (isMusicPlaying) {
+    // Jika sedang play, maka pause
+    bgMusic.pause();
+    musicText.innerText = "Play Music";
+    isMusicPlaying = false;
+  } else {
+    // Jika sedang pause, maka play
+    bgMusic.play().then(() => {
+      musicText.innerText = "Pause Music";
+      isMusicPlaying = true;
+    }).catch((error) => {
+      console.log("Pemutaran audio diblokir oleh browser:", error);
+    });
+  }
+} </script>
+</button>
 </body>
 </html>

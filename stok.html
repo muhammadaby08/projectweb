@@ -1,42 +1,614 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manajemen Stok Bahan Ajar</title>
-  <link rel="stylesheet" href="stock.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Foto Modern & Elegan</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* CSS Masonry Fallback/Columns styling */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .masonry-grid { column-count: 2; }
+        }
+        @media (min-width: 1024px) {
+            .masonry-grid { column-count: 3; }
+        }
+        @media (min-width: 1280px) {
+            .masonry-grid { column-count: 4; }
+        }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-  <div class="container">
-    <h2>Daftar Stok Bahan Ajar</h2>
+    <!-- Header Navbar -->
+    <header class="sticky top-0 z-30 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
+                <a href="Logo aby.jpg" class="flex items-center gap-2 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
+                        <i class="fa-solid font-bold fa-camera text-white text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-indigo-300 bg-clip-text text-transparent tracking-tight">
+                        Muhammad Aby<span class="text-indigo-400"> Gallery</span>
+                    </span>
+                </a>
+                
+                <!-- Quick Likes Counter Mobile View -->
+                <button onclick="toggleLikedFilter()" id="mobileFavBadge" class="md:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs font-medium text-slate-300 hover:text-pink-400 transition-colors">
+                    <i class="fa-solid fa-heart text-pink-500"></i>
+                    <span id="favCountMobile">0</span>
+                </button>
+            </div>
 
-   
-    <form id="formStok" class="form-group">
-      <input type="text" id="inputKode" placeholder="Kode Paket (contoh: BMP004)" required>
-      <input type="text" id="inputNama" placeholder="Nama Bahan Ajar" required>
-      <input type="number" id="inputStok" placeholder="Jumlah Stok" required>
-      <input type="text" id="inputHarga" placeholder="Harga (contoh: Rp 50.000)" required>
-      <button type="submit" class="btn-add">+ Tambah Stok</button>
-    </form>
+            <!-- Search Bar -->
+            <div class="relative w-full md:w-96">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                <input type="text" id="searchInput" placeholder="Cari foto, deskripsi, atau lokasi..." 
+                    class="w-full pl-11 pr-10 py-2.5 bg-slate-900/90 border border-slate-800 rounded-full text-sm text-slate-200 placeholder-slate-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-inner">
+                <button id="clearSearch" onclick="clearSearchInput()" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </button>
+            </div>
 
-  
-    <table>
-      <thead>
-        <tr>
-          <th>Kode</th>
-          <th>Nama Bahan Ajar</th>
-          <th>Stok</th>
-          <th>Harga</th>
-        </tr>
-      </thead>
-      <tbody id="tabelStokBody">
-      </tbody>
-    </table>
-  </div>
+            <!-- Favorites Filter Toggle Desktop -->
+            <div class="hidden md:flex items-center gap-3">
+                <button onclick="toggleLikedFilter()" id="favToggleBtn" class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-sm font-medium text-slate-300 hover:border-pink-500/50 hover:text-pink-400 transition-all duration-300 shadow-sm">
+                    <i class="fa-solid fa-heart text-pink-500" id="favIcon"></i>
+                    <span>Favorit Saya</span>
+                    <span id="favCount" class="ml-1 px-2 py-0.5 text-xs bg-slate-800 text-pink-400 font-bold rounded-full border border-slate-700">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+    <!-- Hero & Category Controls -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Hero Banner -->
+        <section class="text-center py-8 md:py-12 max-w-3xl mx-auto">
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+                Jelajahi Keindahan <br class="hidden sm:inline">
+                <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Melalui Lensa Visual</span>
+            </h1>
+            <p class="text-slate-400 text-base sm:text-lg font-light leading-relaxed">
+                Koleksi fotografi berkualitas tinggi dari alam luar biasa, keajaiban arsitektur, hingga ekspresi potret yang memukau.
+            </p>
+        </section>
+
+        <!-- Filter Categories Pill Buttons -->
+        <section class="flex items-center justify-start md:justify-center gap-2 overflow-x-auto pb-4 mb-8 no-scrollbar scroll-smooth">
+            <button onclick="filterCategory('Semua')" data-category="Semua" class="filter-btn active-filter px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30">
+                Semua
+            </button>
+            <button onclick="filterCategory('Alam')" data-category="Alam" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+                <i class="fa-solid fa-tree mr-1.5 text-emerald-400"></i> Alam
+            </button>
+            <button onclick="filterCategory('Otomotif')" data-category="Otomotif" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+                <i class="fa-solid fa-building mr-1.5 text-amber-400"></i> Otomotif
+            </button>
+            <button onclick="filterCategory('Potret')" data-category="Potret" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+                <i class="fa-solid fa-user mr-1.5 text-sky-400"></i> Potret
+            </button>
+            <button onclick="filterCategory('Travel')" data-category="Travel" class="filter-btn px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+                <i class="fa-solid fa-plane-departure mr-1.5 text-indigo-400"></i> Travel
+            </button>
+        </section>
+
+        <!-- Gallery Masonry Grid Container -->
+        <div id="galleryGrid" class="masonry-grid transition-all duration-500">
+            <!-- Cards generated dynamically via JavaScript -->
+        </div>
+
+        <!-- Empty State Message -->
+        <div id="emptyState" class="hidden text-center py-20 bg-slate-900/50 rounded-3xl border border-slate-800/80 my-8">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-400 text-2xl">
+                <i class="fa-solid fa-image-slash"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-white mb-1">Foto Tidak Ditemukan</h3>
+            <p class="text-slate-400 text-sm max-w-sm mx-auto">Coba gunakan kata kunci pencarian lain atau ganti kategori filter.</p>
+            <button onclick="resetFilters()" class="mt-5 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium rounded-full transition-colors border border-slate-700">
+                Reset Filter & Pencarian
+            </button>
+        </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 backdrop-blur-xl transition-opacity duration-300 opacity-0 p-4 sm:p-6 md:p-10">
+        <!-- Close Button -->
+        <button onclick="closeLightbox()" class="absolute top-4 right-4 z-50 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition-all border border-slate-700/60 shadow-xl group">
+            <i class="fa-solid fa-xmark text-lg group-hover:rotate-90 transition-transform duration-300"></i>
+        </button>
+
+        <!-- Navigation Buttons -->
+        <button onclick="prevImage()" class="absolute left-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition-all border border-slate-700/60 shadow-xl">
+            <i class="fa-solid fa-chevron-left text-base"></i>
+        </button>
+        <button onclick="nextImage()" class="absolute right-4 top-1/2 -translate-y-1/2 z-40 w-11 h-11 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition-all border border-slate-700/60 shadow-xl">
+            <i class="fa-solid fa-chevron-right text-base"></i>
+        </button>
+
+        <!-- Lightbox Content Box -->
+        <div class="relative max-w-5xl w-full max-h-[90vh] bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden flex flex-col lg:flex-row shadow-2xl my-auto">
+            <!-- Image Container -->
+            <div class="lg:w-2/3 bg-black flex items-center justify-center relative min-h-[300px] sm:min-h-[400px] lg:min-h-[500px]">
+                <img id="lightboxImg" src="" alt="" class="max-h-[60vh] lg:max-h-[80vh] w-auto max-w-full object-contain select-none">
+            </div>
+
+            <!-- Details Sidebar -->
+            <div class="lg:w-1/3 p-6 sm:p-8 flex flex-col justify-between bg-slate-900/95 border-t lg:border-t-0 lg:border-l border-slate-800">
+                <div>
+                    <!-- Category Badge & Date -->
+                    <div class="flex items-center justify-between gap-2 mb-4">
+                        <span id="lightboxCategory" class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase tracking-wider">
+                            Kategori
+                        </span>
+                        <span id="lightboxDate" class="text-xs text-slate-400 flex items-center gap-1.5">
+                            <i class="fa-regular fa-calendar"></i> -
+                        </span>
+                    </div>
+
+                    <!-- Title & Description -->
+                    <h2 id="lightboxTitle" class="text-2xl font-bold text-white mb-3 leading-snug">Judul Foto</h2>
+                    <p id="lightboxDesc" class="text-slate-300 text-sm leading-relaxed mb-6 font-light">Deskripsi foto akan muncul di sini.</p>
+
+                    <!-- Meta details -->
+                    <div class="space-y-3 pt-4 border-t border-slate-800/80 text-xs text-slate-400">
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-indigo-400"></i> Lokasi</span>
+                            <span id="lightboxLocation" class="text-slate-200 font-medium">-</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-eye text-emerald-400"></i> Tampilan</span>
+                            <span id="lightboxViews" class="text-slate-200 font-medium">1,240</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Actions in Modal -->
+                <div class="pt-6 mt-6 border-t border-slate-800 flex items-center justify-between gap-3">
+                    <button id="lightboxLikeBtn" onclick="toggleLikeCurrent()" class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 text-slate-200 hover:text-pink-400 transition-all text-sm font-medium">
+                        <i class="fa-solid fa-heart" id="lightboxLikeIcon"></i>
+                        <span id="lightboxLikeText">Suka</span>
+                    </button>
+                    <button onclick="copyPhotoLink()" class="p-2.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 text-slate-300 transition-all" title="Bagikan Link">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 bg-slate-900 border border-slate-700 text-white px-4 py-3 rounded-xl shadow-2xl">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg" id="toastIcon"></i>
+        <span id="toastMsg" class="text-sm font-medium">Notifikasi</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-auto bg-slate-950 border-t border-slate-900 py-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 M. Abiyantoro. Dibuat dengan antusiasme visual & desain modern.</p>
+            <div class="flex items-center gap-4 text-slate-400">
+                <a href="#" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-instagram text-base"></i></a>
+                <a href="#" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-twitter text-base"></i></a>
+                <a href="#" class="hover:text-indigo-400 transition-colors"><i class="fa-brands fa-unsplash text-base"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Gallery Data Array
+        const photos = [
+            {
+                id: 1,
+                title: "Salju dan keindahannya",
+                category: "Alam",
+                description: "Pantulan keindahan panorama tempat bersalju yang tenang.",
+                image: "salju1.JPG",
+                date: "12 Okt 2025",
+                location: "Osaka, Jepang",
+                views: "3,420",
+                liked: false
+            },
+            {
+                id: 2,
+                title: "Gunung",
+                category: "Alam",
+                description: "Momen magis seorang pendaki berdiri di atas lautan awan saat terbitnya fajar.",
+                image: "gunung1.JPG",
+                date: "04 Nov 2025",
+                location: "Merbabu, Indonesia",
+                views: "2,150",
+                liked: true
+            },
+            {
+                id: 3,
+                title: "Jepang",
+                category: "Potret",
+                description: "Eksplorasi warna neon kontemporer yang memantul indah pada eksperimen fotografi potret.",
+                image: "jepang1.JPG",
+                date: "18 Jan 2026",
+                location: "Kyoto, Jepang",
+                views: "5,890",
+                liked: false
+            },
+            {
+                id: 4,
+                title: "Pesona Senja nan eksotis",
+                category: "Travel",
+                description: "Siluet saat matahari terbenam sempurna.",
+                image: "senja.JPG",
+                date: "22 Feb 2026",
+                location: "Shiga, Jepang",
+                views: "4,110",
+                liked: false
+            },
+            {
+                id: 5,
+                title: "Bersama Teman",
+                category: "Friend",
+                description: "Teman baik yang selalu ada.",
+                image: "teman.JPG",
+                date: "01 Mar 2026",
+                location: "Yogyakarta, Indonesia",
+                views: "1,980",
+                liked: false
+            },
+            {
+                id: 6,
+                title: "Gym",
+                category: "Health",
+                description: "Hobby.",
+                image: "gym.JPG",
+                date: "15 Mar 2026",
+                location: "Bumiayu, Indonesia",
+                views: "3,050",
+                liked: false
+            },
+            {
+                id: 7,
+                title: "Otomotif",
+                category: "Hobby",
+                description: "Engginering yang memukau.",
+                image: "mesin.JPG",
+                date: "28 Mar 2026",
+                location: "Toyota, Jepang",
+                views: "6,200",
+                liked: true
+            },
+            {
+                id: 8,
+                title: "Keluarga",
+                category: "Potret",
+                description: "Keluarga cemara yang pernah ada.",
+                image: "keluarga.JPG",
+                date: "05 Apr 2026",
+                location: "Bumiayu, Indonesia",
+                views: "2,740",
+                liked: false
+            }
+        ];
+
+        // Application State
+        let currentCategory = 'Semua';
+        let searchQuery = '';
+        let showOnlyLiked = false;
+        let activeLightboxIndex = 0;
+        let filteredPhotos = [...photos];
+
+        // DOM Elements
+        const galleryGrid = document.getElementById('galleryGrid');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const lightboxModal = document.getElementById('lightboxModal');
+
+        // Initial Load
+        window.onload = function() {
+            renderGallery();
+            updateFavBadges();
+            setupEventListeners();
+        };
+
+        function renderGallery() {
+            // Filter photos based on state
+            filteredPhotos = photos.filter(photo => {
+                const matchesCategory = (currentCategory === 'Semua') || (photo.category === currentCategory);
+                const matchesSearch = photo.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      photo.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      photo.location.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesLiked = !showOnlyLiked || photo.liked;
+
+                return matchesCategory && matchesSearch && matchesLiked;
+            });
+
+            // Handle Empty State
+            if (filteredPhotos.length === 0) {
+                galleryGrid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            // Render HTML Cards
+            galleryGrid.innerHTML = filteredPhotos.map((photo, index) => {
+                return `
+                    <div class="masonry-item group relative overflow-hidden rounded-2xl bg-slate-900 border border-slate-800/80 shadow-lg hover:shadow-2xl hover:shadow-indigo-500/10 hover:border-slate-700 transition-all duration-300">
+                        <!-- Image & Overlay Container -->
+                        <div class="relative overflow-hidden cursor-pointer" onclick="openLightbox(${index})">
+                            <img src="${photo.image}" 
+                                 alt="${photo.title}" 
+                                 loading="lazy"
+                                 class="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-500 ease-out">
+                            
+                            <!-- Dark Gradient Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-5">
+                                <!-- Top Bar in Overlay -->
+                                <div class="flex items-center justify-between">
+                                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-900/80 backdrop-blur-md text-indigo-300 border border-slate-700">
+                                        ${photo.category}
+                                    </span>
+                                    <button onclick="event.stopPropagation(); toggleLike(${photo.id})" 
+                                            class="w-9 h-9 rounded-full bg-slate-900/80 backdrop-blur-md flex items-center justify-center text-slate-300 hover:text-pink-500 transition-colors border border-slate-700">
+                                        <i class="${photo.liked ? 'fa-solid text-pink-500' : 'fa-regular'} fa-heart"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Bottom Info in Overlay -->
+                                <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                    <h3 class="text-lg font-bold text-white mb-1 line-clamp-1">${photo.title}</h3>
+                                    <p class="text-xs text-slate-300 flex items-center gap-1.5 mb-2">
+                                        <i class="fa-solid fa-location-dot text-indigo-400"></i> ${photo.location}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Footer Visible permanently -->
+                        <div class="p-4 flex items-center justify-between border-t border-slate-800/60 bg-slate-900/90">
+                            <div>
+                                <h4 class="text-sm font-semibold text-slate-200 line-clamp-1">${photo.title}</h4>
+                                <span class="text-xs text-slate-500">${photo.date}</span>
+                            </div>
+                            <button onclick="toggleLike(${photo.id})" class="text-slate-400 hover:text-pink-500 transition-colors p-1.5">
+                                <i class="${photo.liked ? 'fa-solid text-pink-500' : 'fa-regular'} fa-heart text-base"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update active state on buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.getAttribute('data-category') === category) {
+                    btn.className = "filter-btn active-filter px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30";
+                } else {
+                    btn.className = "filter-btn px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-300 bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800";
+                }
+            });
+
+            renderGallery();
+        }
+
+        function toggleLikedFilter() {
+            showOnlyLiked = !showOnlyLiked;
+            const favBtn = document.getElementById('favToggleBtn');
+            const favIcon = document.getElementById('favIcon');
+
+            if (showOnlyLiked) {
+                favBtn.classList.add('bg-pink-500/10', 'border-pink-500/50', 'text-pink-400');
+                showToast("Menampilkan foto favorit Anda", "fa-heart text-pink-400");
+            } else {
+                favBtn.classList.remove('bg-pink-500/10', 'border-pink-500/50', 'text-pink-400');
+            }
+
+            renderGallery();
+        }
+
+        function toggleLike(id) {
+            const photo = photos.find(p => p.id === id);
+            if (photo) {
+                photo.liked = !photo.liked;
+                updateFavBadges();
+                renderGallery();
+
+                // If lightbox is active, update modal button too
+                if (!lightboxModal.classList.contains('hidden') && filteredPhotos[activeLightboxIndex]?.id === id) {
+                    updateLightboxLikeState(photo.liked);
+                }
+
+                if (photo.liked) {
+                    showToast("Ditambahkan ke favorit", "fa-heart text-pink-500");
+                }
+            }
+        }
+
+        function updateFavBadges() {
+            const count = photos.filter(p => p.liked).length;
+            document.getElementById('favCount').innerText = count;
+            document.getElementById('favCountMobile').innerText = count;
+        }
+
+        function resetFilters() {
+            currentCategory = 'Semua';
+            searchQuery = '';
+            showOnlyLiked = false;
+            searchInput.value = '';
+            clearSearchBtn.classList.add('hidden');
+            
+            document.getElementById('favToggleBtn').classList.remove('bg-pink-500/10', 'border-pink-500/50', 'text-pink-400');
+            
+            filterCategory('Semua');
+        }
+
+        function openLightbox(index) {
+            activeLightboxIndex = index;
+            const photo = filteredPhotos[activeLightboxIndex];
+            if (!photo) return;
+
+            document.getElementById('lightboxImg').src = photo.image;
+            document.getElementById('lightboxTitle').innerText = photo.title;
+            document.getElementById('lightboxDesc').innerText = photo.description;
+            document.getElementById('lightboxCategory').innerText = photo.category;
+            document.getElementById('lightboxDate').innerHTML = `<i class="fa-regular fa-calendar"></i> ${photo.date}`;
+            document.getElementById('lightboxLocation').innerText = photo.location;
+            document.getElementById('lightboxViews').innerText = photo.views;
+
+            updateLightboxLikeState(photo.liked);
+
+            lightboxModal.classList.remove('hidden');
+            setTimeout(() => {
+                lightboxModal.classList.remove('opacity-0');
+            }, 10);
+
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightboxModal.classList.add('opacity-0');
+            setTimeout(() => {
+                lightboxModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        function prevImage() {
+            if (filteredPhotos.length === 0) return;
+            activeLightboxIndex = (activeLightboxIndex - 1 + filteredPhotos.length) % filteredPhotos.length;
+            openLightbox(activeLightboxIndex);
+        }
+
+        function nextImage() {
+            if (filteredPhotos.length === 0) return;
+            activeLightboxIndex = (activeLightboxIndex + 1) % filteredPhotos.length;
+            openLightbox(activeLightboxIndex);
+        }
+
+        function updateLightboxLikeState(isLiked) {
+            const icon = document.getElementById('lightboxLikeIcon');
+            const text = document.getElementById('lightboxLikeText');
+            if (isLiked) {
+                icon.className = "fa-solid fa-heart text-pink-500";
+                text.innerText = "Disukai";
+            } else {
+                icon.className = "fa-regular fa-heart";
+                text.innerText = "Suka";
+            }
+        }
+
+        function toggleLikeCurrent() {
+            const currentPhoto = filteredPhotos[activeLightboxIndex];
+            if (currentPhoto) {
+                toggleLike(currentPhoto.id);
+            }
+        }
+
+        function copyPhotoLink() {
+            document.execCommand('copy');
+            showToast("Tautan tersalin ke papan klip!", "fa-link text-indigo-400");
+        }
+
+        function setupEventListeners() {
+            // Live Search Input Handling
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.trim();
+                if (searchQuery.length > 0) {
+                    clearSearchBtn.classList.remove('hidden');
+                } else {
+                    clearSearchBtn.classList.add('hidden');
+                }
+                renderGallery();
+            });
+
+            // Keyboard Navigation for Lightbox & Search Shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (lightboxModal.classList.contains('hidden')) return;
+
+                if (e.key === 'Escape') closeLightbox();
+                if (e.key === 'ArrowLeft') prevImage();
+                if (e.key === 'ArrowRight') nextImage();
+            });
+        }
+
+        function clearSearchInput() {
+            searchInput.value = '';
+            searchQuery = '';
+            clearSearchBtn.classList.add('hidden');
+            renderGallery();
+        }
+
+        // Toast Notification Helper
+        function showToast(message, iconClass = "fa-circle-check text-emerald-400") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastMsg.innerText = message;
+            toastIcon.className = `fa-solid ${iconClass} text-lg`;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>

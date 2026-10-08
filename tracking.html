@@ -1,159 +1,839 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full bg-slate-900 text-slate-100">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Tracking Delivery Order</title>
-  <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-  <link rel="stylesheet" href="tracking.css">
+  <title>Jejak Langkah - Peta Tempat yang Pernah Dikunjungi</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.8);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(13, 148, 136, 0.8);
+    }
+
+    /* Glassmorphism custom styles */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Leaflet custom map adjustments */
+    .leaflet-popup-content-wrapper {
+      background: #0f172a !important;
+      color: #f8fafc !important;
+      border-radius: 1rem !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+      padding: 0.25rem !important;
+    }
+    .leaflet-popup-tip {
+      background: #0f172a !important;
+    }
+    .leaflet-container {
+      font-family: 'Inter', sans-serif !important;
+      background-color: #0b1329 !important;
+    }
+    .leaflet-control-zoom a {
+      background-color: #1e293b !important;
+      color: #f8fafc !important;
+      border-color: #334155 !important;
+    }
+    .leaflet-control-zoom a:hover {
+      background-color: #0d9488 !important;
+      color: #ffffff !important;
+    }
+
+    /* Pulse animation for map markers */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.4; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .marker-pulse {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+  </style>
 </head>
-<body class="bg-slate-100 font-sans min-h-screen p-6">
 
-  <div class="max-w-3xl mx-auto space-y-6">
-    
-   
-    <div class="bg-white p-6 rounded-xl shadow-md">
-      <h1 class="text-2xl font-bold text-slate-800 mb-4">Lacak Delivery Order</h1>
-      <form id="searchForm" onsubmit="handleSearch(event)" class="search-form">
-        <input 
-          type="text" 
-          id="doNumber" 
-          placeholder="Masukkan Nomor DO (Contoh: DO12345)" 
-          class="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        >
-        <button 
-          type="submit" 
-          class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition-colors"
-        >
-          Cari
+<body class="h-full flex flex-col font-sans overflow-hidden bg-slate-950 text-slate-100">
+
+  <header class="h-16 glass-panel border-b border-slate-800/80 px-4 lg:px-6 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
+        <i class="fa-solid me-0.5 fa-map-location-dot text-white text-lg"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-lg leading-tight bg-gradient-to-r from-teal-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">Jejak Langkah</h1>
+        <p class="text-xs text-slate-400 hidden sm:block">Peta & Jurnal Perjalanan Interaktif</p>
+      </div>
+    </div>
+
+    <!-- Action Header Buttons -->
+    <div class="flex items-center space-x-2 sm:space-x-3">
+      <button onclick="toggleSidebar()" class="lg:hidden p-2.5 rounded-xl bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 transition">
+        <i class="fa-solid fa-bars text-lg"></i>
+      </button>
+
+      <button onclick="openAddModal()" class="flex items-center space-x-2 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-lg shadow-teal-500/25 transition active:scale-95">
+        <i class="fa-solid fa-plus"></i>
+        <span class="hidden sm:inline">Tambah Tempat</span>
+      </button>
+
+      <!-- Dropdown Menu Settings / Data -->
+      <div class="relative group">
+        <button class="p-2.5 rounded-xl bg-slate-800/80 text-slate-300 hover:text-white hover:bg-slate-700 transition">
+          <i class="fa-solid fa-ellipsis-vertical text-lg"></i>
         </button>
-      </form>
+        <div class="absolute right-0 mt-2 w-48 py-2 glass-panel rounded-xl shadow-2xl border border-slate-700/60 hidden group-hover:block z-50">
+          <button onclick="exportData()" class="w-full text-left px-4 py-2 text-xs text-slate-300 hover:bg-slate-800 hover:text-teal-400 flex items-center gap-2">
+            <i class="fa-solid fa-download w-4"></i> Ekspor Data (JSON)
+          </button>
+          <label class="w-full text-left px-4 py-2 text-xs text-slate-300 hover:bg-slate-800 hover:text-teal-400 flex items-center gap-2 cursor-pointer">
+            <i class="fa-solid fa-upload w-4"></i> Impor Data (JSON)
+            <input type="file" id="importFileInput" accept=".json" class="hidden" onchange="importData(event)">
+          </label>
+          <hr class="my-1 border-slate-800">
+          <button onclick="resetData()" class="w-full text-left px-4 py-2 text-xs text-red-400 hover:bg-red-500/10 flex items-center gap-2">
+            <i class="fa-solid fa-trash-can w-4"></i> Reset Data Awal
+          </button>
+        </div>
+      </div>
     </div>
+  </header>
 
-   
-    <div id="resultCard" class="hidden bg-white p-6 rounded-xl shadow-md space-y-6">
+  <div class="flex-1 flex overflow-hidden relative">
+
+    <!-- SIDEBAR: List Tempat & Stats -->
+    <aside id="sidebar" class="absolute lg:relative z-20 inset-y-0 left-0 w-full sm:w-96 glass-panel border-r border-slate-800/80 flex flex-col transition-transform duration-300 transform -translate-x-full lg:translate-x-0">
       
-      <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b pb-4 gap-2">
-        <div>
-          <p class="text-sm text-slate-500">Penerima Paket</p>
-
-          <h2 id="resStudentName" class="text-xl font-bold text-slate-800">-</h2>
-          <p id="resDoNumber" class="text-xs text-slate-400 font-mono mt-0.5">-</p>
-        </div>
-        <div>
-          <span id="resStatusBadge" class="px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-800">
-            Dalam Pengiriman
-          </span>
-        </div>
-      </div>
-
-     
-      <div>
-        <p class="text-sm font-medium text-slate-700 mb-2">Progres Pengiriman</p>
-        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-          <div id="resProgressBar" class="bg-blue-600 h-3 rounded-full transition-all duration-500" style="width: 65%"></div>
-        </div>
-        <div class="flex justify-between text-xs text-slate-500 mt-2">
-          <span>Diproses</span>
-          <span>Dikirim</span>
-          <span>Sampai Tujuan</span>
-        </div>
-      </div>
-
-    
-      <div>
-        <h3 class="text-md font-semibold text-slate-800 mb-3">Detail Ekspedisi</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
-          <div>
-            <p class="text-xs text-slate-500">Ekspedisi</p>
-            <p id="resExpedition" class="text-sm font-semibold text-slate-700">-</p>
+      <!-- Statistics Widget -->
+      <div class="p-4 border-b border-slate-800/80 grid grid-cols-2 gap-2.5 bg-slate-900/40 shrink-0">
+        <div class="glass-card p-3 rounded-xl flex items-center space-x-3 border-l-4 border-teal-500">
+          <div class="p-2.5 bg-teal-500/10 rounded-lg text-teal-400">
+            <i class="fa-solid fa-earth-americas text-lg"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-500">Tanggal Kirim</p>
-            <p id="resSendDate" class="text-sm font-semibold text-slate-700">-</p>
+            <div id="statCountries" class="text-xl font-bold text-slate-100">0</div>
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Negara</div>
+          </div>
+        </div>
+
+        <div class="glass-card p-3 rounded-xl flex items-center space-x-3 border-l-4 border-indigo-500">
+          <div class="p-2.5 bg-indigo-500/10 rounded-lg text-indigo-400">
+            <i class="fa-solid fa-location-dot text-lg"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-500">Jenis Paket</p>
-            <p id="resPackageType" class="text-sm font-semibold text-slate-700">-</p>
+            <div id="statPlaces" class="text-xl font-bold text-slate-100">0</div>
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Tempat</div>
+          </div>
+        </div>
+
+        <div class="glass-card p-3 rounded-xl flex items-center space-x-3 border-l-4 border-amber-500">
+          <div class="p-2.5 bg-amber-500/10 rounded-lg text-amber-400">
+            <i class="fa-solid fa-star text-lg"></i>
           </div>
           <div>
-            <p class="text-xs text-slate-500">Total Pembayaran</p>
-            <p id="resTotalPayment" class="text-sm font-semibold text-blue-600">-</p>
+            <div id="statFavCategory" class="text-sm font-bold text-slate-100 truncate max-w-[80px]">-</div>
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Favorit</div>
+          </div>
+        </div>
+
+        <div class="glass-card p-3 rounded-xl flex items-center space-x-3 border-l-4 border-purple-500">
+          <div class="p-2.5 bg-purple-500/10 rounded-lg text-purple-400">
+            <i class="fa-solid fa-calendar-days text-lg"></i>
+          </div>
+          <div>
+            <div id="statLatestYear" class="text-xl font-bold text-slate-100">-</div>
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Tahun Terakhir</div>
           </div>
         </div>
       </div>
 
-    </div>
+      <!-- Filters & Search Bar -->
+      <div class="p-4 space-y-3 border-b border-slate-800/80 shrink-0">
+        <!-- Search Input -->
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" oninput="renderPlacesList()" placeholder="Cari tempat atau kota..." 
+            class="w-full bg-slate-900/80 border border-slate-700/80 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-teal-500 transition">
+        </div>
 
-    <div id="notFoundCard" class="hidden bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-center">
-      Nomor Delivery Order tidak ditemukan.
-    </div>
+        <!-- Filter Category Tabs -->
+        <div class="flex items-center space-x-1 overflow-x-auto pb-1 scrollbar-none text-xs" id="categoryFilters">
+          <button onclick="setFilter('Semua')" data-cat="Semua" class="filter-btn active-filter px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition bg-teal-500/20 text-teal-300 border border-teal-500/40">
+            Semua
+          </button>
+          <button onclick="setFilter('Liburan')" data-cat="Liburan" class="filter-btn px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/50">
+            🏝️ Liburan
+          </button>
+          <button onclick="setFilter('Kuliner')" data-cat="Kuliner" class="filter-btn px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/50">
+            🍜 Kuliner
+          </button>
+          <button onclick="setFilter('Kerja')" data-cat="Kerja" class="filter-btn px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/50">
+            💼 Kerja
+          </button>
+          <button onclick="setFilter('Petualangan')" data-cat="Petualangan" class="filter-btn px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/50">
+            🏔️ Petualangan
+          </button>
+        </div>
+      </div>
+
+      <!-- Places List Scrollable Container -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-3" id="placesList">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </aside>
+
+    <!-- MAP CONTAINER -->
+    <main class="flex-1 relative h-full">
+      <div id="map" class="w-full h-full z-0"></div>
+      
+
+      <!-- Map Mode Floating Helper Badge -->
+      <div id="mapClickBanner" class="hidden absolute top-4 left-1/2 -translate-x-1/2 z-10 glass-panel border border-teal-500/50 bg-teal-950/80 px-4 py-2 rounded-full text-xs text-teal-300 flex items-center gap-2 shadow-2xl animate-bounce">
+        <i class="fa-solid fa-crosshairs text-teal-400"></i>
+        <span>Klik di manapun pada peta untuk memilih lokasi!</span>
+        <button onclick="cancelMapClickMode()" class="ml-2 hover:text-white font-bold">&times;</button>
+      </div>
+
+      <!-- Mobile Toggle Sidebar Backdrop Overlay -->
+      <div id="sidebarBackdrop" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-slate-950/60 z-10 lg:hidden"></div>
+    </main>
 
   </div>
 
-  <script>
-  
-    const mockData = {
-      "2023001234": {
-        studentName: "Rina Wulandari",
-        status: "Dalam Perjalanan",
-        progress: 65,
-        statusColor: "bg-blue-100 text-blue-800",
-        barColor: "bg-blue-600",
-        expedition: "JNE Express",
-        sendDate: "2025-08-25",
-        packageType: "OJK01",
-        totalPayment: "Rp 180.000"
-        
-        
-      },
-      "2023005678": {
-        studentName: "Agus Pranoto",
-        status: "Dikirim",
-        progress: 100,
-        statusColor: "bg-green-100 text-green-800",
-        barColor: "bg-green-600",
-        expedition: "Pos Indonesia",
-        sendDate: "2025-08-25",
-        packageType: "OUPBJJBDG",
-        totalPayment: "Rp 220.000"
-      }
-    };
-    
-
-    function handleSearch(event) {
-      event.preventDefault();
+  <!-- MODAL: Tambah Tempat Baru -->
+  <div id="placeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
+    <div class="glass-panel border border-slate-700/80 bg-slate-900 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl transform transition-all my-8">
       
-      const inputVal = document.getElementById('doNumber').value.trim().toUpperCase();
-      const resultCard = document.getElementById('resultCard');
-      const notFoundCard = document.getElementById('notFoundCard');
+      <!-- Modal Header -->
+      <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-900/60">
+        <h3 class="font-bold text-base text-slate-100 flex items-center gap-2" id="modalTitle">
+          <i class="fa-solid fa-map-pin text-teal-400"></i> Tambah Lokasi Baru
+        </h3>
+        <button onclick="closeAddModal()" class="text-slate-400 hover:text-white p-1 rounded-lg transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
 
-      if (mockData[inputVal]) {
-        const data = mockData[inputVal];
+      <!-- Modal Body / Form -->
+      <form id="placeForm" onsubmit="handleFormSubmit(event)" class="p-5 space-y-4 text-xs">
+        <input type="hidden" id="placeId">
 
-       
-        document.getElementById('resStudentName').innerText = data.studentName;
-        document.getElementById('resDoNumber').innerText = `No. DO: ${inputVal}`;
-        
-        const badge = document.getElementById('resStatusBadge');
-        badge.innerText = data.status;
-        badge.className = `px-3 py-1 rounded-full text-sm font-semibold ${data.statusColor}`;
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-300 font-medium mb-1">Nama Tempat *</label>
+            <input type="text" id="formName" required placeholder="misal: Candi Borobudur"
+              class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-medium mb-1">Kota / Negara *</label>
+            <input type="text" id="formLocation" required placeholder="misal: Magelang, Indonesia"
+              class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500">
+          </div>
+        </div>
 
-        const progressBar = document.getElementById('resProgressBar');
-        progressBar.style.width = `${data.progress}%`;
-        progressBar.className = `h-3 rounded-full transition-all duration-500 ${data.barColor}`;
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-slate-300 font-medium mb-1">Kategori *</label>
+            <select id="formCategory" class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500">
+              <option value="Liburan">🏝️ Liburan</option>
+              <option value="Kuliner">🍜 Kuliner</option>
+              <option value="Kerja">💼 Kerja</option>
+              <option value="Petualangan">🏔️ Petualangan</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-300 font-medium mb-1">Tanggal Kunjungan *</label>
+            <input type="date" id="formDate" required
+              class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500">
+          </div>
+        </div>
 
-        document.getElementById('resExpedition').innerText = data.expedition;
-        document.getElementById('resSendDate').innerText = data.sendDate;
-        document.getElementById('resPackageType').innerText = data.packageType;
-        document.getElementById('resTotalPayment').innerText = data.totalPayment;
+        <!-- Coordinates with Map Picker Action -->
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-slate-300 font-medium">Koordinat (Lat, Lng) *</label>
+            <button type="button" onclick="enableMapPickMode()" class="text-teal-400 hover:text-teal-300 text-[11px] font-semibold flex items-center gap-1">
+              <i class="fa-solid fa-location-crosshairs"></i> Pilih di Peta
+            </button>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <input type="number" step="any" id="formLat" required placeholder="Latitude (-7.6079)"
+              class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500">
+            <input type="number" step="any" id="formLng" required placeholder="Longitude (110.2038)"
+              class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500">
+          </div>
+        </div>
 
-        resultCard.classList.remove('hidden');
-        notFoundCard.classList.add('hidden');
+        <div>
+          <label class="block text-slate-300 font-medium mb-1">URL Foto Sampul</label>
+          <input type="url" id="formImage" placeholder="https://images.unsplash.com/..."
+            class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500">
+          <span class="text-[10px] text-slate-500">Kosongkan jika ingin menggunakan gambar default otomatis.</span>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-medium mb-1">Catatan / Kenangan Perjalanan</label>
+          <textarea id="formNotes" rows="3" placeholder="Tuliskan momen seru, rekomendasi tempat, atau kenangan menarik..."
+            class="w-full bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-2 text-slate-100 focus:outline-none focus:border-teal-500"></textarea>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2 flex justify-end space-x-3 border-t border-slate-800">
+          <button type="button" onclick="closeAddModal()" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 font-medium transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-semibold shadow-lg shadow-teal-500/20 transition">
+            Simpan Lokasi
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    // Initial Default Seed Data
+    const defaultPlaces = [
+      {
+        id: "p1",
+        name: "Ubud & Tegalalang",
+        location: "Bali, Indonesia",
+        category: "Liburan",
+        date: "2023-06-15",
+        lat: -8.5069,
+        lng: 115.2625,
+        image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=600&q=80",
+        notes: "Menikmati pemandangan sawah terasering yang indah dan suasana pedesaan yang tenang di Bali."
+      },
+      {
+        id: "p2",
+        name: "Shibuya Crossing & Skytree",
+        location: "Tokyo, Jepang",
+        category: "Petualangan",
+        date: "2024-03-20",
+        lat: 35.6595,
+        lng: 139.7004,
+        image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80",
+        notes: "Pengalaman luar biasa melintasi penyeberangan terramai di dunia dan menikmati ramen lokal otentik."
+      },
+      {
+        id: "p3",
+        name: "Candi Borobudur & Malioboro",
+        location: "Yogyakarta, Indonesia",
+        category: "Kuliner",
+        date: "2023-11-10",
+        lat: -7.6079,
+        lng: 110.2038,
+        image: "https://images.unsplash.com/photo-1596402184320-417e7178b2cd?auto=format&fit=crop&w=600&q=80",
+        notes: "Berburu kuliner gudeg legendaris malam hari dan menikmati kemegahan candi saat matahari terbit."
+      },
+      {
+        id: "p5",
+        name: "Marina Bay Sands",
+        location: "Singapura",
+        category: "Kerja",
+        date: "2024-01-12",
+        lat: 1.2834,
+        lng: 103.8607,
+        image: "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=600&q=80",
+        notes: "Hadir dalam konferensi teknologi tahunan sekaligus menikmati pertunjukan cahaya Gardens by the Bay."
+      },
+      {
+        id: "p6",
+        name: "Gili Trawangan",
+        location: "Lombok, Indonesia",
+        category: "Petualangan",
+        date: "2023-08-18",
+        lat: -8.3503,
+        lng: 116.0339,
+        image: "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?auto=format&fit=crop&w=600&q=80",
+        notes: "Snorkeling melihat penyu laut secara langsung dan menikmati sunset indah di pinggir pantai."
+      }
+      
+    ];
+
+    // Category Color Mapping
+    const categoryColors = {
+      Liburan: { bg: '#10b981', text: 'Emerald', hex: '#10b981' },      // Green
+      Kuliner: { bg: '#f59e0b', text: 'Amber', hex: '#f59e0b' },        // Orange
+      Kerja: { bg: '#6366f1', text: 'Indigo', hex: '#6366f1' },         // Indigo
+      Petualangan: { bg: '#ec4899', text: 'Pink', hex: '#ec4899' }      // Pink
+    };
+
+    // State Variables
+    let places = [];
+    let map = null;
+    let markers = [];
+    let circleHighlights = [];
+    let currentFilter = 'Semua';
+    let isMapClickPickMode = false;
+
+    window.onload = function() {
+      loadStorageData();
+      initMap();
+      renderDashboard();
+    };
+
+    // Load Data from LocalStorage
+    function loadStorageData() {
+      const saved = localStorage.getItem('visited_places_data');
+      if (saved) {
+        try {
+          places = JSON.parse(saved);
+        } catch (e) {
+          places = [...defaultPlaces];
+        }
       } else {
-        resultCard.classList.add('hidden');
-        notFoundCard.classList.remove('hidden');
+        places = [...defaultPlaces];
+        saveStorageData();
+      }
+    }
+
+    // Save Data to LocalStorage
+    function saveStorageData() {
+      localStorage.setItem('visited_places_data', JSON.stringify(places));
+    }
+
+    function initMap() {
+      // Create Leaflet Map initialized over global coordinates
+      map = L.map('map', {
+        zoomControl: false,
+        minZoom: 2
+      }).setView([15, 100], 3);
+
+      // Custom Zoom Control position
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+      // Dark Modern Basemap Tile Layer (CartoDB Dark Matter / Positron)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+      // Handle map clicks for picking location coordinates
+      map.on('click', function(e) {
+        if (isMapClickPickMode) {
+          const lat = e.latlng.lat.toFixed(6);
+          const lng = e.latlng.lng.toFixed(6);
+          
+          document.getElementById('formLat').value = lat;
+          document.getElementById('formLng').value = lng;
+
+          cancelMapClickMode();
+          openAddModal();
+        }
+      });
+    }
+
+    function renderMapMarkers() {
+      // Clear existing markers and highlights
+      markers.forEach(m => map.removeLayer(m));
+      circleHighlights.forEach(c => map.removeLayer(c));
+      markers = [];
+      circleHighlights = [];
+
+      const filtered = getFilteredPlaces();
+
+      filtered.forEach(place => {
+        const catColor = categoryColors[place.category] || categoryColors['Liburan'];
+
+        // Heatmap-style Highlight Radius Circle Marker
+        const circle = L.circleMarker([place.lat, place.lng], {
+          radius: 22,
+          fillColor: catColor.hex,
+          color: catColor.hex,
+          weight: 1,
+          opacity: 0.6,
+          fillOpacity: 0.25
+        }).addTo(map);
+        circleHighlights.push(circle);
+
+        // Custom FontAwesome HTML Marker Icon
+        const customIcon = L.divIcon({
+          className: 'custom-map-pin',
+          html: `
+            <div class="relative group cursor-pointer">
+              <div class="w-8 h-8 rounded-full flex items-center justify-center text-white shadow-xl transform transition hover:scale-125" style="background-color: ${catColor.hex}; border: 2px solid white;">
+                <i class="fa-solid fa-location-dot text-sm"></i>
+              </div>
+            </div>
+          `,
+          iconSize: [32, 32],
+          iconAnchor: [16, 32],
+          popupAnchor: [0, -32]
+        });
+
+        // Popup HTML Template
+        const popupContent = `
+          <div class="w-64 sm:w-72 overflow-hidden rounded-xl text-slate-100">
+            <div class="relative h-32 w-full bg-slate-800">
+              <img src="${place.image || getFallbackImage(place.category)}" alt="${place.name}" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 text-[10px] font-bold px-2.5 py-1 rounded-full text-white shadow" style="background-color: ${catColor.hex};">
+                ${place.category}
+              </span>
+            </div>
+            <div class="p-3">
+              <h4 class="font-bold text-sm text-white mb-0.5">${place.name}</h4>
+              <p class="text-xs text-teal-400 font-medium mb-2"><i class="fa-solid fa-location-dot mr-1"></i>${place.location}</p>
+              <p class="text-[11px] text-slate-300 line-clamp-3 mb-3 bg-slate-800/60 p-2 rounded-lg border border-slate-700/50">${place.notes || 'Tidak ada catatan.'}</p>
+              <div class="flex items-center justify-between text-[10px] text-slate-400 border-t border-slate-800 pt-2">
+                <span><i class="fa-solid fa-calendar mr-1"></i>${formatDate(place.date)}</span>
+                <button onclick="deletePlace('${place.id}')" class="text-red-400 hover:text-red-300 font-semibold flex items-center gap-1">
+                  <i class="fa-solid fa-trash"></i> Hapus
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        const marker = L.marker([place.lat, place.lng], { icon: customIcon })
+          .bindPopup(popupContent)
+          .addTo(map);
+
+        markers.push(marker);
+      });
+    }
+
+    function renderDashboard() {
+      renderMapMarkers();
+      renderPlacesList();
+      updateStatistics();
+    }
+
+    function getFilteredPlaces() {
+      const searchVal = document.getElementById('searchInput')?.value.toLowerCase() || '';
+      return places.filter(place => {
+        const matchesCategory = currentFilter === 'Semua' || place.category === currentFilter;
+        const matchesSearch = place.name.toLowerCase().includes(searchVal) || 
+                              place.location.toLowerCase().includes(searchVal) ||
+                              (place.notes && place.notes.toLowerCase().includes(searchVal));
+        return matchesCategory && matchesSearch;
+      });
+    }
+
+    // Render Sidebar List Cards
+    function renderPlacesList() {
+      const listContainer = document.getElementById('placesList');
+      const filtered = getFilteredPlaces();
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = `
+          <div class="text-center py-10 text-slate-500">
+            <i class="fa-solid fa-map-location-dot text-4xl mb-3 opacity-40"></i>
+            <p class="text-xs">Tidak ada tempat yang ditemukan.</p>
+          </div>
+        `;
+        return;
+      }
+
+      listContainer.innerHTML = filtered.map(place => {
+        const catColor = categoryColors[place.category] || categoryColors['Liburan'];
+        return `
+          <div onclick="flyToPlace(${place.lat}, ${place.lng}, '${place.id}')" 
+            class="glass-card p-3 rounded-2xl hover:border-teal-500/50 transition cursor-pointer group flex gap-3 relative overflow-hidden">
+            
+            <div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 bg-slate-800 relative">
+              <img src="${place.image || getFallbackImage(place.category)}" alt="${place.name}" class="w-full h-full object-cover group-hover:scale-110 transition duration-300">
+            </div>
+
+            <div class="flex-1 min-w-0 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md text-white" style="background-color: ${catColor.hex}">
+                    ${place.category}
+                  </span>
+                  <span class="text-[10px] text-slate-400"><i class="fa-regular fa-calendar mr-1"></i>${formatDate(place.date, true)}</span>
+                </div>
+                <h4 class="font-bold text-xs text-slate-100 group-hover:text-teal-300 transition truncate">${place.name}</h4>
+                <p class="text-[11px] text-slate-400 truncate"><i class="fa-solid fa-location-dot text-teal-400 mr-1"></i>${place.location}</p>
+              </div>
+
+              <div class="flex items-center justify-end space-x-2 mt-2 pt-1 border-t border-slate-800/60 text-slate-400 text-xs">
+                <button onclick="event.stopPropagation(); editPlace('${place.id}')" class="hover:text-teal-300 transition p-1">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button onclick="event.stopPropagation(); deletePlace('${place.id}')" class="hover:text-red-400 transition p-1">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update Numerical Statistics
+    function updateStatistics() {
+      // Total Places
+      document.getElementById('statPlaces').innerText = places.length;
+
+      // Total Unique Countries (Extract after comma in location string)
+      const countries = new Set(places.map(p => {
+        const parts = p.location.split(',');
+        return parts.length > 1 ? parts[parts.length - 1].trim() : p.location.trim();
+      }));
+      document.getElementById('statCountries').innerText = countries.size;
+
+      // Favorite Category Count
+      if (places.length > 0) {
+        const catCounts = {};
+        places.forEach(p => catCounts[p.category] = (catCounts[p.category] || 0) + 1);
+        const favoriteCat = Object.keys(catCounts).reduce((a, b) => catCounts[a] > catCounts[b] ? a : b);
+        document.getElementById('statFavCategory').innerText = favoriteCat;
+      } else {
+        document.getElementById('statFavCategory').innerText = '-';
+      }
+
+      // Latest Travel Year
+      if (places.length > 0) {
+        const years = places.map(p => new Date(p.date).getFullYear()).filter(y => !isNaN(y));
+        document.getElementById('statLatestYear').innerText = years.length ? Math.max(...years) : '-';
+      } else {
+        document.getElementById('statLatestYear').innerText = '-';
+      }
+    }
+
+    function flyToPlace(lat, lng, id) {
+      if (map) {
+        map.flyTo([lat, lng], 10, {
+          duration: 1.5
+        });
+
+        // Open popup for selected marker
+        setTimeout(() => {
+          markers.forEach(m => {
+            const mLat = m.getLatLng().lat;
+            const mLng = m.getLatLng().lng;
+            if (Math.abs(mLat - lat) < 0.0001 && Math.abs(mLng - lng) < 0.0001) {
+              m.openPopup();
+            }
+          });
+        }, 1200);
+      }
+
+      // On mobile view, close sidebar after selecting place
+      if (window.innerWidth < 1024) {
+        toggleSidebar();
+      }
+    }
+
+    function setFilter(cat) {
+      currentFilter = cat;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = "filter-btn active-filter px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition bg-teal-500/20 text-teal-300 border border-teal-500/40";
+        } else {
+          btn.className = "filter-btn px-3 py-1.5 rounded-lg font-medium whitespace-nowrap transition bg-slate-800 text-slate-400 hover:text-slate-200 border border-slate-700/50";
+        }
+      });
+      renderDashboard();
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      sidebar.classList.toggle('-translate-x-full');
+      backdrop.classList.toggle('hidden');
+    }
+
+    function enableMapPickMode() {
+      closeAddModal();
+      isMapClickPickMode = true;
+      document.getElementById('mapClickBanner').classList.remove('hidden');
+    }
+
+    function cancelMapClickMode() {
+      isMapClickPickMode = false;
+      document.getElementById('mapClickBanner').classList.add('hidden');
+    }
+
+    function openAddModal(isEdit = false) {
+      if (!isEdit) {
+        document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-map-pin text-teal-400"></i> Tambah Lokasi Baru';
+        document.getElementById('placeForm').reset();
+        document.getElementById('placeId').value = '';
+        document.getElementById('formDate').value = new Date().toISOString().split('T')[0];
+      }
+      document.getElementById('placeModal').classList.remove('hidden');
+    }
+
+    function closeAddModal() {
+      document.getElementById('placeModal').classList.add('hidden');
+    }
+
+    function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const id = document.getElementById('placeId').value || 'p_' + Date.now();
+      const newPlace = {
+        id: id,
+        name: document.getElementById('formName').value.trim(),
+        location: document.getElementById('formLocation').value.trim(),
+        category: document.getElementById('formCategory').value,
+        date: document.getElementById('formDate').value,
+        lat: parseFloat(document.getElementById('formLat').value),
+        lng: parseFloat(document.getElementById('formLng').value),
+        image: document.getElementById('formImage').value.trim(),
+        notes: document.getElementById('formNotes').value.trim()
+      };
+
+      const existingIndex = places.findIndex(p => p.id === id);
+      if (existingIndex >= 0) {
+        places[existingIndex] = newPlace;
+      } else {
+        places.unshift(newPlace);
+      }
+
+      saveStorageData();
+      closeAddModal();
+      renderDashboard();
+
+      // Zoom to newly added place
+      map.flyTo([newPlace.lat, newPlace.lng], 8);
+    }
+
+    function editPlace(id) {
+      const place = places.find(p => p.id === id);
+      if (!place) return;
+
+      document.getElementById('modalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-teal-400"></i> Edit Lokasi';
+      document.getElementById('placeId').value = place.id;
+      document.getElementById('formName').value = place.name;
+      document.getElementById('formLocation').value = place.location;
+      document.getElementById('formCategory').value = place.category;
+      document.getElementById('formDate').value = place.date;
+      document.getElementById('formLat').value = place.lat;
+      document.getElementById('formLng').value = place.lng;
+      document.getElementById('formImage').value = place.image || '';
+      document.getElementById('formNotes').value = place.notes || '';
+
+      openAddModal(true);
+    }
+
+    function deletePlace(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus lokasi ini dari peta?')) {
+        places = places.filter(p => p.id !== id);
+        saveStorageData();
+        renderDashboard();
+      }
+    }
+
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(places, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `jejak_langkah_visited_places_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const importedPlaces = JSON.parse(e.target.result);
+          if (Array.isArray(importedPlaces)) {
+            places = importedPlaces;
+            saveStorageData();
+            renderDashboard();
+            alert('Data berhasil diimpor!');
+          } else {
+            alert('Format file JSON tidak valid.');
+          }
+        } catch (err) {
+          alert('Gagal membaca file JSON.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetData() {
+      if (confirm('Apakah Anda yakin ingin mengembalikan data ke contoh awal? Semua data baru Anda akan terhapus.')) {
+        places = [...defaultPlaces];
+        saveStorageData();
+        renderDashboard();
+      }
+    }
+
+    // Helper Utility Functions
+    function formatDate(dateString, short = false) {
+      if (!dateString) return '-';
+      const date = new Date(dateString);
+      if (isNaN(date)) return dateString;
+      
+      const options = short 
+        ? { year: 'numeric', month: 'short' }
+        : { year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('id-ID', options);
+    }
+
+    function getFallbackImage(category) {
+      switch (category) {
+        case 'Kuliner':
+          return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80';
+        case 'Kerja':
+          return 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80';
+        case 'Petualangan':
+          return 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80';
+        default:
+          return 'https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=600&q=80';
       }
     }
   </script>

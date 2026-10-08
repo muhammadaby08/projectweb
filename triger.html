@@ -1,107 +1,514 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" href="triger.css">
-  <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aby Travel - Glassmorphism UI & Navigation</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter, Outfit & Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', 'Inter', sans-serif;
+        }
+        .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Glassmorphism Navigation Bar Effect */
+        .glass-navbar {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);;
+        }
+
+
+        /* Underline input focus line effect */
+        .input-underline {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .input-underline:focus-within {
+            border-bottom-color: #3b82f6;
+            box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Custom scrollbar */
+        textarea::-webkit-scrollbar,
+        div::-webkit-scrollbar {
+            width: 5px;
+        }
+        textarea::-webkit-scrollbar-track,
+        div::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        textarea::-webkit-scrollbar-thumb,
+        div::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 8px;
+        }
+        textarea::-webkit-scrollbar-thumb:hover,
+        div::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.45);
+        }
+
+        /* Pulse glowing dot */
+        @keyframes subtleGlow {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.15); }
+        }
+        .glow-dot {
+            animation: subtleGlow 2.5s infinite ease-in-out;
+        }
+        
+        
+    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-           <img src="LogoUT.png" alt="Deskripsi gambar" width="60">
-          <a class="navbar-brand" href="stok.html">Informasi Bahan Ajar</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="tracking.html">Tracking Pengiriman</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Laporan
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">Monitoring Progress DO Bahan Ajar</a></li>
-                  <li><a class="dropdown-item" href="#">Rekap Bahan Ajar</a></li>
-                </ul>
-                 <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/index.html">History Transaksi Bahan Ajar</a>
-              </li>
-              </li>
-            </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-        </div>
-      </nav>
-      
 
+<body class="min-h-screen w-full relative flex flex-col justify-between overflow-x-hidden bg-slate-950 text-white select-none">
 
-  <header class="hero">
-    <h1>M. Abiyantoro</h1>
-    <p>Nim  044770692</p>
-  </header>
-
-  <main class="content-section">
-    
-   
-    <div class="card animate-on-scroll fade-up">
-      <h2>1. Halaman Login</h2>
+    <!-- Background Image with Dark Tint Overlay (Tokyo Streetscape Dusk) -->
+    <div class="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-1000 scale-105" 
+         style="background-image: url('background3.jpg');">
+        <!-- Dark tint overlay for enhanced text legibility and glass depth -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/75 backdrop-brightness-95"></div>
     </div>
 
-   
-    <div class="card animate-on-scroll slide-left">
-      <h2>2. Dashboard</h2>
-      
-    </div>
-
-
-    <div class="card animate-on-scroll slide-right">
-      <h2>3. Input Data</h2>
-    </div>
-
-  
-    <div class="card animate-on-scroll zoom-in">
-      <h2>4. Tracking</h2>
-    </div>
-
-  </main>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-      const animatedElements = document.querySelectorAll('.animate-on-scroll');
-
-     
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          
-          if (entry.isIntersecting) {
-           
-            entry.target.classList.add('show');
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 w-full glass-navbar transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-         
-          } else {
-          
-            entry.target.classList.remove('show');
-          }
-        });
-      }, {
-       
-        threshold: 0.1 
-      });
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center space-x-3 group cursor-pointer">
+                <div class="flex flex-col">
+                    <span class="font-heading font-extrabold text-lg tracking-wider text-white group-hover:text-sky-300 transition-colors">
+                       Muhammad Aby
+                    </span>
+                    <span class="text-[10px] tracking-widest text-white/60 uppercase font-medium -mt-1">
+                        Visual Storyteller
+                    </span>
+                </div>
+            </a>
 
-     
-      animatedElements.forEach((el) => observer.observe(el));
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-1 bg-white/5 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 shadow-inner">
+                <a href="#home" onclick="setActiveNav(this)" class="nav-item px-4 py-2 rounded-full text-xs font-medium text-white bg-white/20 transition-all hover:text-white">
+                    <i class="fa-solid fa-house mr-1.5 text-sky-400"></i>Home
+                </a>
+                <a href="about.html" onclick="setActiveNav(this)" class="nav-item px-4 py-2 rounded-full text-xs font-medium text-white/70 hover:text-white transition-all">
+                    <i class="fa-solid fa-user mr-1.5 text-white/50"></i>About
+                </a>
+                <a href="stok.html" onclick="setActiveNav(this)" class="nav-item px-4 py-2 rounded-full text-xs font-medium text-white/70 hover:text-white transition-all">
+                    <i class="fa-solid fa-images mr-1.5 text-white/50"></i>Gallery
+                </a>
+                <a href="tracking.html" onclick="setActiveNav(this)" class="nav-item px-4 py-2 rounded-full text-xs font-medium text-white/70 hover:text-white transition-all">
+                    <i class="fa-solid fa-location-dot mr-1.5 text-white/50"></i>Destinations
+                </a>
+                <a href="kontak.html" onclick="setActiveNav(this)" class="nav-item px-4 py-2 rounded-full text-xs font-medium text-white/70 hover:text-white transition-all">
+                    <i class="fa-solid fa-envelope mr-1.5 text-white/50"></i>Contact
+                </a>
+            </nav>
 
+            <!-- Right Controls: Language Switcher & Action CTA -->
+            <div class="hidden sm:flex items-center space-x-3">
+                <!-- Language Selector -->
+                <div class="flex items-center bg-black/40 backdrop-blur-md p-1 rounded-full border border-white/15">
+                    <button id="lang-id" onclick="setLanguage('id')" class="px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white transition-all shadow-sm">
+                        🇮🇩 ID
+                    </button>
+                    <button id="lang-en" onclick="setLanguage('en')" class="px-3 py-1 rounded-full text-xs font-semibold text-white/60 hover:text-white transition-all">
+                        🇬🇧 EN
+                    </button>
+                </div>
+
+                <!-- Explore Action Button -->
+                <button onclick="switchTab('profile')" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-semibold text-xs shadow-lg shadow-blue-500/25 active:scale-95 transition-all flex items-center space-x-2">
+                    <span>Explore Now</span>
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Mobile Hamburger Button -->
+            <div class="md:hidden flex items-center space-x-2">
+                <!-- Mobile Language Selector -->
+                <div class="flex items-center bg-black/40 p-1 rounded-full border border-white/15 text-[11px]">
+                    <button id="mobile-lang-id" onclick="setLanguage('id')" class="px-2 py-0.5 rounded-full font-bold bg-white/20 text-white">ID</button>
+                    <button id="mobile-lang-en" onclick="setLanguage('en')" class="px-2 py-0.5 rounded-full font-bold text-white/60">EN</button>
+                </div>
+
+                <button onclick="toggleMobileMenu()" class="p-2.5 rounded-2xl bg-white/10 border border-white/15 text-white hover:bg-white/20 transition-all focus:outline-none">
+                    <i id="mobile-menu-icon" class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu Drawer -->
+        <div id="mobile-menu" class="hidden md:hidden glass-navbar border-t border-white/10 px-6 py-5 space-y-3 transition-all">
+            <a href="#home" onclick="toggleMobileMenu()" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl bg-white/10 text-white text-sm font-medium">
+                <i class="fa-solid fa-house text-sky-400 w-5"></i><span>Home</span>
+            </a>
+            <a href="#about" onclick="toggleMobileMenu()" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-white/80 hover:bg-white/10 hover:text-white text-sm font-medium transition">
+                <i class="fa-solid fa-user text-sky-400 w-5"></i><span>About</span>
+            </a>
+            <a href="#gallery" onclick="toggleMobileMenu()" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-white/80 hover:bg-white/10 hover:text-white text-sm font-medium transition">
+                <i class="fa-solid fa-images text-sky-400 w-5"></i><span>Gallery</span>
+            </a>
+            <a href="#destinations" onclick="toggleMobileMenu()" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-white/80 hover:bg-white/10 hover:text-white text-sm font-medium transition">
+                <i class="fa-solid fa-location-dot text-sky-400 w-5"></i><span>Destinations</span>
+            </a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="flex items-center space-x-3 px-4 py-2.5 rounded-xl text-white/80 hover:bg-white/10 hover:text-white text-sm font-medium transition">
+                <i class="fa-solid fa-envelope text-sky-400 w-5"></i><span>Contact</span>
+            </a>
+            
+            <div class="pt-3 border-t border-white/10 flex justify-center">
+                <button onclick="switchTab('profile'); toggleMobileMenu()" class="w-full py-3 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow-lg flex items-center justify-center space-x-2">
+                    <span>Jelajahi Profil Aby</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Center Glass Container -->
+    <main class="relative z-10 my-auto flex justify-center items-center px-4 py-10">
+        <div class="glass-card w-full max-w-lg rounded-[36px] p-6 sm:p-10 transition-all duration-300">
+            
+            <!-- Glass Switcher Tabs (Profile / Login / Stats) -->
+            <div class="flex items-center justify-between bg-black/30 backdrop-blur-lg p-1.5 rounded-2xl border border-white/15 mb-8">
+                <button id="tab-btn-profile" onclick="switchTab('profile')" class="flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold text-white bg-white/20 transition-all flex items-center justify-center space-x-1.5 shadow-sm">
+                    <i class="fa-solid fa-address-card text-sky-300"></i>
+                    <span id="tab-txt-profile">Profil Aby</span>
+                </button>
+                <button id="tab-btn-login" onclick="switchTab('login')" class="flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold text-white/60 hover:text-white transition-all flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Login</span>
+                </button>
+                <button id="tab-btn-stats" onclick="switchTab('stats')" class="flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold text-white/60 hover:text-white transition-all flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Stats</span>
+                </button>
+            </div>
+
+            <!-- TAB 1: Profile Form Panel -->
+            <div id="tab-panel-profile" class="tab-panel transition-all duration-300">
+                <!-- Card Header -->
+                <div class="text-center mb-8">
+                    <h1 id="card-title" class="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-md">
+                        Hello, I'm Aby!
+                    </h1>
+                </div>
+
+                <!-- Form Content -->
+                <form onsubmit="handleExplore(event)" class="space-y-6">
+                    
+                  
+
+                    <!-- Input Field 3: Bio Textarea -->
+                    <div class="input-underline relative">
+                        <textarea 
+                            id="input-bio" 
+                            rows="5" 
+                            class="w-full bg-transparent py-1 text-xs sm:text-sm text-white/90 leading-relaxed focus:outline-none resize-none"
+                        >Selamat datang di dunia petualangan saya yang penuh warna dan memikat. Perjalanan saya lahir dari pencarian jati diri dan pemahaman akan hakikat kehidupan itu sendiri. Melalui cerita visual yang tegas, cerah, dan penuh warna dari berbagai tempat.</textarea>
+                    </div>
+
+                    <!-- Action Button Container -->
+                    <div class="pt-3">
+    <!-- Ubah <button> menjadi <a> dan tambahkan href -->
+                    <a 
+                      href="stok.html" 
+                      class="group w-full py-3.5 px-6 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-sky-500 hover:from-blue-500 hover:to-sky-400 active:scale-[0.98] text-white font-semibold text-base shadow-lg shadow-blue-600/35 transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer text-center no-underline">
+                     <span id="btn-text">Jelajahi Galeri</span>
+                    <i class="fa-solid fa-arrow-right text-sm transition-transform group-hover:translate-x-1.5"></i>
+                    </a>
+</div>
+
+                    <!-- Quick Tools (Copy / Share) -->
+                    <div class="flex items-center justify-between text-xs text-white/70 pt-1 px-1">
+                        <button type="button" onclick="copyBioText()" class="hover:text-white transition flex items-center space-x-1.5 py-1">
+                            <i class="fa-regular fa-copy text-sky-400"></i>
+                            <span id="btn-copy-txt">Salin Teks</span>
+                        </button>
+                        <button type="button" onclick="shareProfile()" class="hover:text-white transition flex items-center space-x-1.5 py-1">
+                            <i class="fa-solid fa-share-nodes text-sky-400"></i>
+                            <span id="btn-share-txt">Bagikan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TAB 2: Login Form Panel (Directly matched with screenshot reference) -->
+            <div id="tab-panel-login" class="tab-panel hidden transition-all duration-300">
+                <div class="text-center mb-8">
+                    <h2 class="font-heading text-3xl font-bold text-white tracking-tight">Login</h2>
+                    <p class="text-xs text-white/70 mt-1">Akses akun perjalanan Aby Anda</p>
+                </div>
+
+                <form onsubmit="handleLoginSubmit(event)" class="space-y-6">
+                    <div class="input-underline relative">
+                        <label class="block text-xs font-medium text-white/80 mb-1">Email</label>
+                        <input type="email" required placeholder="admin@abytravel.com" class="w-full bg-transparent py-1.5 text-sm font-medium text-white placeholder-white/40 focus:outline-none">
+                    </div>
+
+                    <div class="input-underline relative">
+                        <label class="block text-xs font-medium text-white/80 mb-1">Password</label>
+                        <input type="password" required placeholder="••••••••" class="w-full bg-transparent py-1.5 text-sm font-medium text-white placeholder-white/40 focus:outline-none">
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs text-white/80 pt-1">
+                        <label class="flex items-center space-x-2 cursor-pointer select-none">
+                            <input type="checkbox" class="w-3.5 h-3.5 rounded bg-white/20 border-white/30 text-blue-600 focus:ring-0 cursor-pointer">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" onclick="showToast('Fitur reset password dikirim ke email!')" class="hover:underline hover:text-white transition">Forgot Password?</a>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" class="w-full py-3.5 px-6 rounded-full bg-[#007bff] hover:bg-blue-600 active:scale-[0.98] text-white font-semibold text-base shadow-lg shadow-blue-600/40 transition-all duration-200 cursor-pointer">
+                            Login
+                        </button>
+                    </div>
+
+                    <div class="text-center text-xs text-white/70 pt-2">
+                        Don't have an account? <a href="#" onclick="switchTab('profile')" class="font-bold text-white hover:underline">Register</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TAB 3: Travel Stats Panel -->
+            <div id="tab-panel-stats" class="tab-panel hidden transition-all duration-300">
+                <div class="text-center mb-6">
+                    <h2 class="font-heading text-2xl font-bold text-white">Statistik Perjalanan Aby</h2>
+                    <p class="text-xs text-white/70 mt-1">Jejak petualangan secara realtime</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center">
+                        <i class="fa-solid fa-earth-americas text-2xl text-sky-400 mb-1"></i>
+                        <div class="text-2xl font-extrabold text-white">2+</div>
+                        <div class="text-[11px] text-white/70">Negara Dikunjungi</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center">
+                        <i class="fa-solid fa-camera text-2xl text-emerald-400 mb-1"></i>
+                        <div class="text-2xl font-extrabold text-white">1k</div>
+                        <div class="text-[11px] text-white/70">Foto Dokumentasi</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center">
+                        <i class="fa-solid fa-plane-departure text-2xl text-amber-400 mb-1"></i>
+                        <div class="text-2xl font-extrabold text-white">180k</div>
+                        <div class="text-[11px] text-white/70">KM Ditempuh</div>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center">
+                        <i class="fa-solid fa-heart text-2xl text-rose-400 mb-1"></i>
+                        <div class="text-2xl font-extrabold text-white">Tokyo</div>
+                        <div class="text-[11px] text-white/70">Destinasi Favorit</div>
+                    </div>
+                </div>
+
+                <button onclick="showToast('Statistik telah diperbarui! ✈️')" class="w-full py-3 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-white font-medium text-xs transition">
+                    <i class="fa-solid fa-rotate-right mr-1.5"></i> Refresh Data Statistik
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="relative z-10 w-full px-6 py-5 glass-navbar border-t border-white/10 text-xs text-white/80 drop-shadow-md">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <!-- Copyright (Matched directly with user's exact footer requirement) -->
+            <div class="font-normal tracking-wide text-center sm:text-left">
+                © 2026 M.Abiyantoro. All rights reserved.
+            </div>
+
+            <!-- Social Media Icons -->
+            <div class="flex items-center space-x-5 text-white/70">
+                <a href="https://www.instagram.com/abyyant/" class="hover:text-sky-400 transition-colors p-1" title="Instagram"><i class="fa-brands fa-instagram text-base"></i></a>
+                <a href="https://github.com/repos?q=owner%3A%40me" class="hover:text-sky-400 transition-colors p-1" title="GitHub"><i class="fa-brands fa-github text-base"></i></a>
+                <a href="https://www.youtube.com/@abyyyant" class="hover:text-sky-400 transition-colors p-1" title="YouTube"><i class="fa-brands fa-youtube text-base"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Popup -->
+    <div id="toast" class="fixed top-24 right-6 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 bg-black/80 backdrop-blur-md text-white px-5 py-3.5 rounded-2xl border border-white/20 shadow-2xl flex items-center space-x-3">
+        <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+            <i class="fa-solid fa-circle-check text-base"></i>
+        </div>
+        <span id="toast-msg" class="text-xs font-medium tracking-wide">Teks berhasil disalin!</span>
+    </div>
+
+    <script>
+        // Content Translation Dictionary
+        const bios = {
+            id: {
+                title: "Travel Profile",
+                subtitle: "Visual Storyteller & Explorer",
+                role: "Traveler & Visual Storyteller",
+                lblName: "Nama / Name",
+                lblRole: "Role / Status",
+                lblBio: "Biografi & Filosofi Perjalanan",
+                bio: "Selamat datang di dunia petualangan saya yang penuh warna dan memikat. Perjalanan saya lahir dari pencarian jati diri dan pemahaman akan hakikat kehidupan itu sendiri. Melalui cerita visual yang tegas, cerah, dan penuh warna dari berbagai penjuru dunia, setiap langkah perjalanan saya menangkap keindahan pengalaman manusia serta mengungkapkan nilai universalnya melalui eksplorasi narasi pribadi.",
+                btn: "Jelajahi Galeri",
+                copyTxt: "Salin Teks",
+                shareTxt: "Bagikan",
+                tabProfile: "Profil Aby",
+                toastCopy: "Teks biografi berhasil disalin!"
+            },
+            en: {
+                title: "Travel Profile",
+                subtitle: "Visual Storyteller & Explorer",
+                role: "Traveler & Visual Storyteller",
+                lblName: "Name / Nama",
+                lblRole: "Role / Status",
+                lblBio: "Biography & Travel Philosophy",
+                bio: "Welcome to my vibrant and captivating travel world. My journeys rise from the search for self-definition and understanding the essence of life itself. Through striking, colorful, and clear visual storytelling from around the globe, my travels capture the collective human experience and reveal its universality through personal narrative exploration.",
+                btn: "Explore Gallery",
+                copyTxt: "Copy Text",
+                shareTxt: "Share Profile",
+                tabProfile: "Aby's Profile",
+                toastCopy: "Bio text copied successfully!"
+            }
+        };
+
+        let currentLang = 'id';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const data = bios[lang];
+
+            // Update DOM Elements
+            document.getElementById('card-title').innerText = data.title;
+            document.getElementById('card-subtitle').innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 glow-dot"></span> ${data.subtitle}`;
+            document.getElementById('lbl-name').innerText = data.lblName;
+            document.getElementById('lbl-role').innerText = data.lblRole;
+            document.getElementById('lbl-bio').innerText = data.lblBio;
+            document.getElementById('input-role').value = data.role;
+            document.getElementById('input-bio').value = data.bio;
+            document.getElementById('btn-text').innerText = data.btn;
+            document.getElementById('btn-copy-txt').innerText = data.copyTxt;
+            document.getElementById('btn-share-txt').innerText = data.shareTxt;
+            document.getElementById('tab-txt-profile').innerText = data.tabProfile;
+
+            // Sync Desktop Language Buttons
+            const btnId = document.getElementById('lang-id');
+            const btnEn = document.getElementById('lang-en');
+            const mobileBtnId = document.getElementById('mobile-lang-id');
+            const mobileBtnEn = document.getElementById('mobile-lang-en');
+
+            if (lang === 'id') {
+                btnId.className = "px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white transition-all shadow-sm";
+                btnEn.className = "px-3 py-1 rounded-full text-xs font-semibold text-white/60 hover:text-white transition-all";
+                mobileBtnId.className = "px-2 py-0.5 rounded-full font-bold bg-white/20 text-white";
+                mobileBtnEn.className = "px-2 py-0.5 rounded-full font-bold text-white/60";
+            } else {
+                btnEn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-white/20 text-white transition-all shadow-sm";
+                btnId.className = "px-3 py-1 rounded-full text-xs font-semibold text-white/60 hover:text-white transition-all";
+                mobileBtnEn.className = "px-2 py-0.5 rounded-full font-bold bg-white/20 text-white";
+                mobileBtnId.className = "px-2 py-0.5 rounded-full font-bold text-white/60";
+            }
+        }
+
+        function switchTab(tabName) {
+            const tabs = ['profile', 'login', 'stats'];
+            
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                const panel = document.getElementById(`tab-panel-${t}`);
+
+                if (t === tabName) {
+                    btn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold text-white bg-white/20 transition-all flex items-center justify-center space-x-1.5 shadow-sm";
+                    panel.classList.remove('hidden');
+                } else {
+                    btn.className = "flex-1 py-2.5 px-3 rounded-xl text-xs font-semibold text-white/60 hover:text-white transition-all flex items-center justify-center space-x-1.5";
+                    panel.classList.add('hidden');
+                }
+            });
+        }
+
+        // Navbar Active Item Switcher
+        function setActiveNav(element) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.className = "nav-item px-4 py-2 rounded-full text-xs font-medium text-white/70 hover:text-white transition-all";
+            });
+            element.className = "nav-item px-4 py-2 rounded-full text-xs font-medium text-white bg-white/20 transition-all hover:text-white";
+        }
+
+        // Toggle Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.className = "fa-solid fa-xmark text-lg";
+            } else {
+                menu.classList.add('hidden');
+                icon.className = "fa-solid fa-bars text-lg";
+            }
+        }
+
+        function copyBioText() {
+            const bioText = document.getElementById('input-bio').value;
+            const name = document.getElementById('input-name').value;
+            const fullText = `Halo, saya ${name}!\n\n${bioText}`;
+
+            // ExecCommand fallback for iframe copy compatibility
+            const el = document.createElement('textarea');
+            el.value = fullText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            showToast(bios[currentLang].toastCopy);
+        }
+
+        function shareProfile() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Aby Travel Profile',
+                    text: document.getElementById('input-bio').value,
+                    url: window.location.href,
+                }).catch(() => {});
+            } else {
+                copyBioText();
+            }
+        }
+
+        function handleExplore(e) {
+            e.preventDefault();
+            const name = document.getElementById('input-name').value;
+            showToast(`Selamat datang di galeri petualangan ${name}! ✨`);
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            showToast('Login berhasil! Selamat datang Aby 🎉');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            toastMsg.innerText = message;
+            
+            toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-100px]', 'opacity-0');
+            }, 2800);
+        }
+    </script>
 </body>
 </html>

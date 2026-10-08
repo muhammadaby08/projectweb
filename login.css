@@ -175,3 +175,33 @@ body {
     background: #0056b3;
     color: #fff;
 }
+/* Styling Tombol Musik Melayang di Kanan Bawah */
+.music-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: #1e293b; /* Warna latar dark mode */
+  color: #38bdf8; /* Warna teks biru cerah */
+  border: 1px solid #334155;
+  border-radius: 30px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.music-btn:hover {
+  background-color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+.music-btn:active {
+  transform: translateY(0);
+}
